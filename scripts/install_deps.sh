@@ -54,5 +54,5 @@ sudo pip3 install evdev
 
 #curl https://get.pimoroni.com/zerolipo | bash
 
-sudo rpi-update 0065c82b95aed1150c19ff7a6244832f7a14fb3e
-sudo reboot
+#sudo rpi-update 0065c82b95aed1150c19ff7a6244832f7a14fb3e
+#sudo reboot
