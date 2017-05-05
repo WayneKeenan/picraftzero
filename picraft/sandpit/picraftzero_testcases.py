@@ -15,7 +15,7 @@ from picraft.zero import MessageReceiver, Wheelbase, PanTilt, Joystick, filter_m
 #   'id'    => a logical numeric identifier, e.g. 0 = 1st (or right hand side) joystick, 1 = 2nd etc....
 #   'data'  => an array so it can easily be used as a tuple for later source/value processing
 
-messages = MessageReceiver()
+#messages = MessageReceiver()
 
 # Find joysticks/thumbsticks for speed controll and pan/tilt control
 # First parameter is a logical id where 0 = right stick, 1 = left stick
@@ -66,6 +66,18 @@ def print_local_joystick_mixed():
     printer.source = steering_mixer(joystick_right.values)
 
 
+def print_local_joysticks():
+    printer.name = "joystick_right.values"
+    printer.source = joystick_right.values
+
+    printer2.name = "joystick_left.values"
+    printer2.source = joystick_left.values
+
+
+
+
+
+
 
 def my_steering_mixer(yaw, throttle):
     max_power = 100
@@ -87,7 +99,7 @@ def print_pantilt_three_combined_streams():
     # Map input values from local and remote joysticks (scaled)
     # Accepts remote 'PANTILT' messages that  (scaling not required)
     printer.name = "print_pantilt_three_combined_streams"
-    sp_join.source = join_values(
+    printer.source = join_values(
         scaled_pair(joystick_left.values, 0, 180, -100, 100),
         scaled_pair(filter_messages(messages.values, type='JOYSTICK', id=1), 0, 180, -100, 100),
         filter_messages(messages.values, type='PANTILT', id=0)
@@ -320,6 +332,7 @@ def robot():
 
 
 #print_local_joystick()
+print_local_joysticks()
 #print_remote_joystick()
 #print_combined_joysticks()
 #print_local_joystick_scaled()
@@ -349,7 +362,7 @@ def robot():
 #mock_robot_builtin_pantilt_conversion()
 #mock_robot()
 
-robot()
+#robot()
 
 
 # Slow things down for testing:

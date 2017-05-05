@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 import gpiozero.devices
 from gpiozero.pins.mock import MockPin
-from gpiozero.mixins import SourceMixin, ValuesMixin
+from gpiozero.mixins import SourceMixin, ValuesMixin, SharedMixin
 from gpiozero.devices import GPIODevice, Device, CompositeDevice, GPIOBase
 from gpiozero import ButtonBoard, AnalogInputDevice, Button
 from gpiozero.exc import DeviceClosed
@@ -36,7 +36,8 @@ from .utils import arduino_map, constrain
 # ----------------------
 # Input device
 
-class MessageReceiver(Device):
+
+class MessageReceiver(SharedMixin, Device):
     def __init__(self, port=8001, **args):
         self._port = port
         self._last_event_type = None
@@ -49,6 +50,10 @@ class MessageReceiver(Device):
         self._http_server.start()
         self._ws_server.start()
         super(MessageReceiver, self).__init__(**args)
+
+    @classmethod
+    def _shared_key(cls, port):
+        return None
 
     def on_websocket_message(self, message):
         logger.debug("on_websocket_message: {}".format(message))
@@ -96,13 +101,21 @@ try:
     logger.debug(controller)
     bind_controller(devices, controller)
 
-    class Joystick(Device):
+    class Joystick(Device, SourceMixin):
         def __init__(self, joystick_id=0, **args):
+            super(Joystick, self).__init__(**args)
+
             self._last_x_axis = None
             self._last_y_axis = None
 
+            self.messages = MessageReceiver(8001)
+            self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
+            self._value = (0, 0)
+
+
             if joystick_id == 1:
                 x_axis_name, y_axis_name = ('lx', 'ly')
+
             else:
                 x_axis_name, y_axis_name = ('rx', 'ry')
 
@@ -110,10 +123,11 @@ try:
             self._y_axis_name = y_axis_name
 
             # self._joystick = controller
-            super(Joystick, self).__init__(**args)
 
         @property
         def value(self):
+            if self._value[0] is not None or self._value[1] is not None:
+                return self._value
             (x_axis, y_axis) = controller.get_axis_values(self._x_axis_name, self._y_axis_name)
             return int(x_axis*100), int(y_axis*100)
             # (x_axis, y_axis) = ( int(x_axis*100), int(y_axis*100))
@@ -124,17 +138,29 @@ try:
             # else:
             #     return (None, None)
 
-
+        @value.setter
+        def value(self, value):
+            self._value = value
 
 except (ImportError, IndexError):
     logger.warning("Input dependancy (library or joystick) not found, defaulting to stub")
-    class Joystick(Device):
+    class Joystick(Device, SourceMixin):
         def __init__(self, joystick_id=0, **args):
+
             super(Joystick, self).__init__(**args)
+            self.messages = MessageReceiver(8001)
+            self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
+            self._value = (0,0)
 
         @property
         def value(self):
-            return 0, 0
+            return self._value
+
+        @value.setter
+        def value(self, value):
+            self._value = value
+
+
 
 
 # ----------------------
