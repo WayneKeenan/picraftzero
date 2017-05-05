@@ -5,6 +5,6 @@ from evdev import InputDevice, categorize, ecodes, KeyEvent
 gamepad = InputDevice('/dev/input/event0')
 
 for event in gamepad.read_loop():
-    print(event.type)
+    print()
     keyevent = categorize(event)
-    print(keyevent)
+    print(event.type, keyevent, event.value)

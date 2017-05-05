@@ -331,8 +331,8 @@ def robot():
 #dual_triple_input_filter_all_input_scaled_pantilt_conversion()
 
 
-#print_local_joystick()
-print_local_joysticks()
+print_local_joystick()
+#print_local_joysticks()
 #print_remote_joystick()
 #print_combined_joysticks()
 #print_local_joystick_scaled()
@@ -368,8 +368,8 @@ print_local_joysticks()
 # Slow things down for testing:
 #wheelbase.source_delay = 1
 #pan_tilt.source_delay = 1
-#printer.source_delay = 1
-#printer2.source_delay = 1
+printer.source_delay = 1
+printer2.source_delay = 1
 
 pause()
 

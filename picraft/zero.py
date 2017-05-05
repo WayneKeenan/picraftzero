@@ -8,7 +8,7 @@ from time import sleep
 from signal import pause
 from threading import Lock
 import logging
-
+from pprint import pformat
 logger = logging.getLogger(__name__)
 
 
@@ -90,16 +90,11 @@ class MessageReceiver(SharedMixin, Device):
         return self._read()
 
 
+
+from .inputs import InputController
+
 try:
-    from approxeng.input.selectbinder import bind_controller
-    from approxeng.input.controllers import find_controllers
-
-
-    d = find_controllers()[0]
-    controller = d['controller']
-    devices = d['devices']
-    logger.debug(controller)
-    bind_controller(devices, controller)
+    controller = InputController()
 
     class Joystick(Device, SourceMixin):
         def __init__(self, joystick_id=0, **args):
@@ -126,10 +121,10 @@ try:
 
         @property
         def value(self):
-            if self._value[0] is not None or self._value[1] is not None:
-                return self._value
-            (x_axis, y_axis) = controller.get_axis_values(self._x_axis_name, self._y_axis_name)
-            return int(x_axis*100), int(y_axis*100)
+            #if self._value[0] is not None or self._value[1] is not None:
+            #    return self._value
+            (x_axis, y_axis) = ( controller.get_value(self._x_axis_name), controller.get_value(self._y_axis_name) )
+            return int(x_axis), int(y_axis)
             # (x_axis, y_axis) = ( int(x_axis*100), int(y_axis*100))
             # if x_axis != self._last_x_axis and y_axis != self._last_y_axis:
             #     self._last_x_axis = x_axis

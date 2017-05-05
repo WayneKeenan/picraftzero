@@ -122,3 +122,5 @@ class InputHandler:
 
     def stop(self):
         self.keep_running = False
+
+
