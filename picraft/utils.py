@@ -172,3 +172,33 @@ def i2c_scan(bus_num=1):
             pass
 
     return devices
+
+
+
+
+# Must run some activvites on the main thread, e.g. PyGame event polling
+
+import queue
+import threading
+
+callback_queue = queue.Queue()
+
+def mainthread_dispatch(func):
+    callback_queue.put(func)
+
+def wait_blocking():
+    callback = callback_queue.get() #blocks
+    callback()
+
+
+def wait_nonblocking():
+    while True:
+        try:
+            callback = callback_queue.get(False) #doesn't block
+        except queue.Empty:
+            break
+        callback()
+
+def main_loop():
+    while True:
+        wait_blocking()

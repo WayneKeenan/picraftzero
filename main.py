@@ -2,11 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-
-
-from signal import pause
-
-from picraft.zero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair
+from picraft.zero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start
 
 
 
@@ -31,6 +27,10 @@ pan_tilt = PanTilt(pan=0, tilt=1)       # pan/tilt  = logical id of i2c servo (a
 wheelbase.source = steering_mixer(joystick_right.values)
 pan_tilt.source =  scaled_pair(joystick_left.values, 180, 0, -100, 100)
 
-pause()
+
+wheelbase.source_delay = 2
+pan_tilt.source_delay = 2
+
+start()
 
 

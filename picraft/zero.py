@@ -27,11 +27,7 @@ from picraft.servers import HTTPServer, WebSocketServer as WSS
 
 
 from .utils import arduino_map, constrain
-# def arduino_map(x, in_min, in_max, out_min, out_max):
-#     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
-#
-# def constrain(val, min_val, max_val):
-#     return min(max_val, max(min_val, val))
+
 
 # ----------------------
 # Input device
@@ -102,10 +98,10 @@ try:
 
             self._last_x_axis = None
             self._last_y_axis = None
-
-            self.messages = MessageReceiver(8001)
-            self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
             self._value = (0, 0)
+
+            #self.messages = MessageReceiver(8001)
+            #self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
 
 
             if joystick_id == 1:
@@ -117,7 +113,6 @@ try:
             self._x_axis_name = x_axis_name
             self._y_axis_name = y_axis_name
 
-            # self._joystick = controller
 
         @property
         def value(self):
@@ -125,13 +120,7 @@ try:
             #    return self._value
             (x_axis, y_axis) = ( controller.get_value(self._x_axis_name), controller.get_value(self._y_axis_name) )
             return int(x_axis), int(y_axis)
-            # (x_axis, y_axis) = ( int(x_axis*100), int(y_axis*100))
-            # if x_axis != self._last_x_axis and y_axis != self._last_y_axis:
-            #     self._last_x_axis = x_axis
-            #     self._last_y_axis = y_axis
-            #     return tuple([x_axis, y_axis])
-            # else:
-            #     return (None, None)
+
 
         @value.setter
         def value(self, value):
@@ -431,7 +420,9 @@ def custom_source_tool(func, values):
         yield func(*next(it))
 
 
-
+from .utils import main_loop
+def start():
+    main_loop()
 
 # ------------------------------------------------------
 # notes...
