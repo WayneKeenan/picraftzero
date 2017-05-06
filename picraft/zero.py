@@ -211,7 +211,7 @@ class Wheelbase(SourceMixin, CompositeDevice):
 
     @value.setter
     def value(self, value):
-        print("Wheelbase.value={}".format(value))
+        #print("Wheelbase.value={}".format(value))
         self.left_motor.value, self.right_motor.value = value
 
 
