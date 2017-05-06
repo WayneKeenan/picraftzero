@@ -1,5 +1,5 @@
 from signal import pause
-from picraft.zero import Joystick, Wheelbase, steering_mixer
+from picraft.zero import Joystick, Wheelbase, steering_mixer, start
 
 # Joystick axis values are  (left/down)  -100 .. 100   (right/up)
 # Motor expects for left and right:   (full speed backwards) -100  .. 100 (full speed forwards)
@@ -10,4 +10,4 @@ tiny4wd_motors = Wheelbase(left=0, right=1)  # left/right= logical id of i2c mot
 # Connect the motor speeds (left, right) to the joysticks axis (x,y), via a 'steering mixer'
 tiny4wd_motors.source = steering_mixer(joystick.values)
 
-pause()
+start()

@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-from picraft.utils import arduino_map
+from picraft.utils import constrain
 
 from picraft.interfaces.hardware.providers import MotorProvider
 from picraft.utils import dedupe
@@ -28,9 +28,12 @@ class PimoroniExplorerHatMotor(MotorProvider):
 
     #@dedupe
     def set_speed(self, speed):
-        speed = arduino_map(speed, -128, 127, -100, 100)
+        logger.debug("set_speed({}, {})".format(self.motor_id, speed))
+
+        speed = constrain(speed, -100, 100)
         try:
             PimoroniExplorerHatMotor.motors[self.motor_id].speed(speed)
+            pass
         except AttributeError as ae:
             logger.error("Pimoroni Explorer HAT error setting motor speed, perhaps the HAT is not attached?")
 

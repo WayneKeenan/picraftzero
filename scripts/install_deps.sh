@@ -21,7 +21,7 @@ grep -q '^dtparam=i2c1_arm' $CONFIG && sed -i 's/^dtparam=i2c1_arm.*/dtparam=i2c
 
 # Pimoroni Explorer pHAT
 
-sudo pip3 install cap1xxx
+#sudo pip3 install cap1xxx
 
 # Video stremaing
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
@@ -48,9 +48,10 @@ sudo service uv4l_raspicam restart
 
 # For linux Events based input:
 
-sudo pip install evdev
-sudo pip3 install evdev
+#sudo pip install evdev
+#sudo pip3 install evdev
 
+sudo pip3 install -r requirements.txt
 
 #curl https://get.pimoroni.com/zerolipo | bash
 

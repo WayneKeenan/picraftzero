@@ -4,35 +4,32 @@ from __future__ import (
     absolute_import,
     division,
 )
+
 from time import sleep
-from signal import pause
 from threading import Lock
 import logging
-from pprint import pformat
-logger = logging.getLogger(__name__)
-
 
 import gpiozero.devices
 from gpiozero.pins.mock import MockPin
-from gpiozero.mixins import SourceMixin, ValuesMixin, SharedMixin
-from gpiozero.devices import GPIODevice, Device, CompositeDevice, GPIOBase
-from gpiozero import ButtonBoard, AnalogInputDevice, Button
-from gpiozero.exc import DeviceClosed
-from gpiozero.tools import cos_values, scaled, inverted, smoothed, negated
 gpiozero.devices.pin_factory = MockPin      # TODO: only do this on non-PI platforms
 
+from gpiozero.mixins import SourceMixin,SharedMixin
+from gpiozero.devices import Device, CompositeDevice
 
 
-from picraft.servers import HTTPServer, WebSocketServer as WSS
+from .servers import HTTPServer, WebSocketServer as WSS
+from .utils import arduino_map, main_loop
+from .inputs import InputController
+from .providers import get_motor_provider, get_servo_provider
 
 
-from .utils import arduino_map, constrain
+logger = logging.getLogger(__name__)
 
 
 # ----------------------
-# Input device
+# Websocket
 
-
+# TODO: some fixing in this...
 class MessageReceiver(SharedMixin, Device):
     def __init__(self, port=8001, **args):
         self._port = port
@@ -40,6 +37,7 @@ class MessageReceiver(SharedMixin, Device):
         self._last_event_data = None
         self._last_event_id = None
         self._last_message = {}
+        self._listeners = []
 
         self._http_server = HTTPServer() # TODO: accept port param
         self._ws_server = WSS(self, ws_port=port)
@@ -49,12 +47,22 @@ class MessageReceiver(SharedMixin, Device):
 
     @classmethod
     def _shared_key(cls, port):
-        return None
+        return None             # always returning same value means only ever a single instance is created
 
     def on_websocket_message(self, message):
         logger.debug("on_websocket_message: {}".format(message))
-        #message["data"] = tuple(message["data"])
         self._last_message = message
+        self.dispatch_listener_message(message)
+
+    def add_listener(self, func):
+        self._listeners.append(func)
+
+    def remove_listener(self, func):
+        self._listeners.remove(func)
+
+    def dispatch_listener_message(self, message):
+        for listener in self._listeners:
+            listener(message)
 
 
     @property
@@ -62,17 +70,15 @@ class MessageReceiver(SharedMixin, Device):
         return self._port
 
     def _read(self):
-        # return self._last_event_data
-        #if self._last_message:
-        #    msg = self._last_message.copy()
-        #    self._last_message = (0, 0)
-        #else:
-        #    msg = None
-        #return msg
+        # if self._last_message:
+        #     msg = self._last_message.copy()
+        #     self._last_message = None
+        # else:
+        #     msg = None
+        # return msg
         return self._last_message
 
-    def _send(self):
-        return 456
+
 
     @property
     def value(self):
@@ -87,71 +93,50 @@ class MessageReceiver(SharedMixin, Device):
 
 
 
-from .inputs import InputController
-
-try:
-    controller = InputController()
-
-    class Joystick(Device, SourceMixin):
-        def __init__(self, joystick_id=0, **args):
-            super(Joystick, self).__init__(**args)
-
-            self._last_x_axis = None
-            self._last_y_axis = None
-            self._value = (0, 0)
-
-            #self.messages = MessageReceiver(8001)
-            #self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
 
 
-            if joystick_id == 1:
-                x_axis_name, y_axis_name = ('lx', 'ly')
+class Joystick(Device, SourceMixin):
 
-            else:
-                x_axis_name, y_axis_name = ('rx', 'ry')
+    def __init__(self, joystick_id=0, **args):
+        super(Joystick, self).__init__(**args)
 
-            self._x_axis_name = x_axis_name
-            self._y_axis_name = y_axis_name
+        self._value = (0, 0)
+        self.joystick_id = joystick_id
+        self.joystick = InputController(self.joystick_id)
+        self.joystick.add_listener(self.joystick_event)
+
+        self.messages = MessageReceiver(8001)           # a 'shared' (singleton) resource
+        self.messages.add_listener(self.message_recv)
+
+        if joystick_id == 1:
+            self._x_axis_name, self._y_axis_name = ('lx', 'ly')
+        else:
+            self._x_axis_name, self._y_axis_name = ('rx', 'ry')
+
+    def message_recv(self, message):
+        if message["type"] == "JOYSTICK" and message["id"] == self.joystick_id:
+            self._value = tuple(message['data'])
+            logger.debug("message_recv: value = {}".format(self._value))
+
+    def joystick_event(self, joystick):
+        self._value = (int(joystick.get_value(self._x_axis_name)), int(joystick.get_value(self._y_axis_name)))
+
+        logger.debug("joystick_event: value = {}".format(self._value))
+
+    @property
+    def value(self):
+        return self._value
 
 
-        @property
-        def value(self):
-            #if self._value[0] is not None or self._value[1] is not None:
-            #    return self._value
-            (x_axis, y_axis) = ( controller.get_value(self._x_axis_name), controller.get_value(self._y_axis_name) )
-            return int(x_axis), int(y_axis)
-
-
-        @value.setter
-        def value(self, value):
-            self._value = value
-
-except (ImportError, IndexError):
-    logger.warning("Input dependancy (library or joystick) not found, defaulting to stub")
-    class Joystick(Device, SourceMixin):
-        def __init__(self, joystick_id=0, **args):
-
-            super(Joystick, self).__init__(**args)
-            self.messages = MessageReceiver(8001)
-            self.source = filter_messages(self.messages.values, type='JOYSTICK', id=joystick_id)
-            self._value = (0,0)
-
-        @property
-        def value(self):
-            return self._value
-
-        @value.setter
-        def value(self, value):
-            self._value = value
+    @value.setter
+    def value(self, value):
+        self._value = value
 
 
 
 
 # ----------------------
 # OUtput device
-
-
-from picraft.providers import get_motor_provider, get_servo_provider
 
 
 class PiCraftMotor(SourceMixin, Device):
@@ -203,8 +188,6 @@ class PiCraftServo(SourceMixin, Device):
         self._write(value)
 
 
-# ---
-
 # ----------
 # Composite devices
 
@@ -228,6 +211,7 @@ class Wheelbase(SourceMixin, CompositeDevice):
 
     @value.setter
     def value(self, value):
+        print("Wheelbase.value={}".format(value))
         self.left_motor.value, self.right_motor.value = value
 
 
@@ -252,9 +236,34 @@ class PanTilt(SourceMixin, CompositeDevice):
     def value(self, value):
         self.pan_servo.value, self.tilt_servo.value = value
 
+# Debugging Helper
+
+class SourcePrinter(SourceMixin, Device):
+    def __init__(self, name=""):
+        self._name = name
+        super(SourcePrinter, self).__init__()
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        if name:
+            self._name = name
+
+    @property
+    def value(self):
+        return super(SourcePrinter, self).value
+
+    @value.setter
+    def value(self, value):
+        if value:
+            print("SourcePrinter({}): '{}'".format(self._name, value))
 
 
 
+# *Zero 'Source' utilities
 
 def filter_messages(values, type=None, id=None, dedupe=False):
     it = iter(values)
@@ -285,8 +294,8 @@ def steering_mixer(values, max_power=100):
         axis_pair = next(it)
         (yaw, throttle) = axis_pair
         # TODO: change it so that upstream (None, None) pairs are not passed along
-        yaw = yaw if yaw else 0
-        throttle = throttle if throttle else 0
+        yaw = float(yaw) if yaw else 0.0
+        throttle = float(throttle) if throttle else 0.0
         left = throttle - yaw
         right = throttle + yaw
         scale = float(max_power) / max(1, abs(left), abs(right))
@@ -313,29 +322,6 @@ def scaled_pair(values, output_min, output_max, input_min=0, input_max=1):
         yield int((((v1 - input_min) / input_size) * output_size) + output_min), int((((v2 - input_min) / input_size) * output_size) + output_min)
 
 
-def scaled_pair_NEW(values, output_min, output_max, input_min=0, input_max=1):
-    print("VALUES:", values)
-    sentinel = object()
-
-    iterators = [iter(it) for it in values]
-    while iterators:
-        for it in iterators:
-            elem = next(it, sentinel)
-            print ("ELEM:", elem)
-            if elem is sentinel:
-                return
-            (v1, v2) = elem
-            v1 = v1 if v1 else 0
-            v2 = v2 if v2 else 0
-
-            if input_min >= input_max:
-                raise ValueError('input_min must be smaller than input_max')
-            input_size = input_max - input_min
-            output_size = output_max - output_min
-            yield (((v1 - input_min) / input_size) * output_size) + output_min, (
-            ((v2 - input_min) / input_size) * output_size) + output_min
-
-
 
 def pantilt_converter(values):
     it = iter(values)
@@ -348,49 +334,6 @@ def pantilt_converter(values):
         tilt = arduino_map(tilt, -100, 100, 0, 180)
         yield (pan, tilt)
 
-from time import sleep
-from gpiozero import SourceMixin, Device
-from picraft.zero import Joystick
-
-class SourcePrinter(SourceMixin, Device):
-    def __init__(self, name=""):
-        self._name = name
-        super(SourcePrinter, self).__init__()
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        if name:
-            self._name = name
-
-
-
-    @property
-    def value(self):
-        return super(SourcePrinter, self).value
-
-    @value.setter
-    def value(self, value):
-        if value:
-            print("SourcePrinter({}): '{}'".format(self._name, value))
-
-def join_values_oldest(*values):
-    #print(values)
-    it = iter(zip * (values))
-    while True:
-        v = next(it)
-        yield v
-        sleep(0.01)
-
-def join_values_old(*values):
-    #print("VALUES:", values)
-
-    for v in zip(*values):
-        #print("VAL:", v)
-        yield v
 
 def join_values(*values):
     #print("VALUES:", values)
@@ -409,10 +352,6 @@ def join_values(*values):
                 break
         yield tuple(result)
 
-def show_tuples(*values):
-    yield values
-
-
 
 def custom_source_tool(func, values):
     it = iter(values)
@@ -420,12 +359,8 @@ def custom_source_tool(func, values):
         yield func(*next(it))
 
 
-from .utils import main_loop
+# Misc
+
 def start():
     main_loop()
-
-# ------------------------------------------------------
-# notes...
-
-# TODO: create a message pocessor using a shared mixin (singleton)
 

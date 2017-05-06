@@ -9,6 +9,39 @@ from time import time, sleep
 
 # see: http://code.activestate.com/lists/python-tutor/96452/
 def arduino_map(x, in_min, in_max, out_min, out_max):
+    """Return x mapped from in range to out range.
+
+    >>> arduino_map(0, 0, 10, 100, 1000)
+    100
+    >>> arduino_map(5, 0, 10, 100, 1000)
+    550
+    >>> arduino_map(10, 0, 10, 100, 1000)
+    1000
+    
+    >>> arduino_map(0, 10, 0, 100, 1000)
+    1000
+    >>> arduino_map(5, 10, 0, 100, 1000)
+    550
+    >>> arduino_map(10, 10, 0, 100, 1000)
+    100
+
+    >>> arduino_map(0, 0, 10, 1000, 100)
+    1000
+    >>> arduino_map(10, 0, 10, 1000, 100)
+    100
+
+    >>> arduino_map(0, -10, 10, -100, 100)
+    0
+    >>> arduino_map(128, 0, 255, -100, 100)
+    0
+    >>> arduino_map(128, 255, 0, 100, -100)
+    0
+    >>> arduino_map(255, 255, 0, 100, -100)
+    100
+    >>> arduino_map(0, 255, 0, 100, -100)
+    -100
+
+    """
     return (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min
 
 
@@ -202,3 +235,8 @@ def wait_nonblocking():
 def main_loop():
     while True:
         wait_blocking()
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
