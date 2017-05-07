@@ -116,9 +116,20 @@ elif USE_PYGAME:
         'ry': {'event_name': 'AXIS3', 'mapfunc': lambda x: int(x*-100) if abs(x) > ROCKCANDY_AXIS_DEADZONE else 0},
     }
 
+    NIMBUS_AXIS_DEADZONE = 0.05
+
+    NIMBUS_MAPPING = {
+        'lx': {'event_name': 'AXIS0', 'mapfunc': lambda x: int(x * 100) if abs(x) > NIMBUS_AXIS_DEADZONE else 0},
+        'ly': {'event_name': 'AXIS1', 'mapfunc': lambda x: int(x * -100) if abs(x) > NIMBUS_AXIS_DEADZONE else 0},
+        'rx': {'event_name': 'AXIS2', 'mapfunc': lambda x: int(x * 100) if abs(x) > NIMBUS_AXIS_DEADZONE else 0},
+        'ry': {'event_name': 'AXIS3', 'mapfunc': lambda x: int(x * -100) if abs(x) > NIMBUS_AXIS_DEADZONE else 0},
+
+    }
+
     JOYSTICK_NAME_MAPPINGS = {
         "Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,                               # Mac
         "Performance Designed Products Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,  # Pi
+        "Nimbus" : NIMBUS_MAPPING,
     }
 
     try:
