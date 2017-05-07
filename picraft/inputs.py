@@ -129,11 +129,12 @@ elif USE_PYGAME:
             joystick_names.append(pygame.joystick.Joystick(i).get_name())
 
         logger.info("Joysticks count {} : {}".format(joystick_count, joystick_names))
-        joystick_0 = pygame.joystick.Joystick(0)
-        joystick_0.init()
+        if joystick_count > 0:
+            joystick_0 = pygame.joystick.Joystick(0)
+            joystick_0.init()
 
     except pygame.error as e:
-        logger.error("PyGame error during joystick setup")
+        logger.error("PyGame error during joystick setup, {}".format(e))
 
 
     class InputController:

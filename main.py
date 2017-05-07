@@ -1,4 +1,7 @@
-from picraft.zero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start
+import logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+from picraft.zero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start, filter_messages, MessageReceiver, join_values
 
 # Find joysticks/thumbsticks for speed controll and pan/tilt control
 # First parameter is a logical id where 0 = right stick, 1 = left stick
@@ -12,6 +15,8 @@ from picraft.zero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pa
 joystick_right= Joystick(0)
 joystick_left = Joystick(1)
 
+messages = MessageReceiver(port=8001)
+
 # Motor assume for left and right:   (full speed backwards) -100  .. 100 (full speed forwards)
 wheelbase = Wheelbase(left=0, right=1)  # left/right= logical id of i2c motor (auto-detected Explorer pHAT or PiConZero)
 pan_tilt = PanTilt(pan=0, tilt=1)       # pan/tilt  = logical id of i2c servo (auto-detected PanTilt HAT or PiConZero)
@@ -19,7 +24,10 @@ pan_tilt = PanTilt(pan=0, tilt=1)       # pan/tilt  = logical id of i2c servo (a
 
 # Connect the motor speeds (a,b) to the joysticks axis (x,y), via conversion
 wheelbase.source = steering_mixer(joystick_right.values)
-pan_tilt.source =  scaled_pair(joystick_left.values, 180, 0, -100, 100)
+pan_tilt.source =  join_values(
+    filter_messages(messages.values, type='PANTILT', id=0),
+    scaled_pair(joystick_left.values, 180, 0, -100, 100)
+)
 
 
 start()
