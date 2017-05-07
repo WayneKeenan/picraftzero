@@ -118,7 +118,7 @@ elif USE_PYGAME:
 
     JOYSTICK_NAME_MAPPINGS = {
         "Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,                               # Mac
-        "Performance Designed Products Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING  # Pi
+        "Performance Designed Products Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,  # Pi
     }
 
     try:
@@ -132,6 +132,7 @@ elif USE_PYGAME:
         if joystick_count > 0:
             joystick_0 = pygame.joystick.Joystick(0)
             joystick_0.init()
+            joystick_0_name = joystick_0.get_name()
 
     except pygame.error as e:
         logger.error("PyGame error during joystick setup, {}".format(e))
@@ -144,10 +145,10 @@ elif USE_PYGAME:
             self.controller_state = {}
             self._listener = None
 
-            if joystick_count < 1:
+            if joystick_count < 1 or not (joystick_0_name in JOYSTICK_NAME_MAPPINGS):
                 return
             self.joystick = joystick_0
-            self.mapping = JOYSTICK_NAME_MAPPINGS[self.joystick.get_name()]
+            self.mapping = JOYSTICK_NAME_MAPPINGS[joystick_0_name]
 
             self.thread = threading.Thread(target=self._start, name="InputController"+str(joystick_id))
             self.thread.daemon = True
@@ -158,6 +159,8 @@ elif USE_PYGAME:
 
 
         def _start(self):
+            logger.info("Using Joystick : {}".format(self.joystick.get_name()))
+
             while self.keep_running:
                 mainthread_dispatch(lambda: self._process_events(pygame.event.get()))
                 sleep(0.01)
@@ -165,6 +168,7 @@ elif USE_PYGAME:
         def _process_events(self, events):
             # TODO: to place nicely with other toys in the future this really should be fed from a global event loop
             for e in events:
+                logger.debug("Joystick event: {}".format(e))
                 if e.type == JOYAXISMOTION:
                     for axis_num in range(0, self.joystick.get_numaxes()):
                         axis_key = 'AXIS'+str(axis_num)
