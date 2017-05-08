@@ -136,13 +136,23 @@ elif USE_PYGAME:
 
     }
 
+    XB360_AXIS_DEADZONE = 0.05
 
+    XB360_MAPPING = {
+        'lx': {'event_name': 'AXIS0', 'mapfunc': lambda x: int(x * 100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'ly': {'event_name': 'AXIS1', 'mapfunc': lambda x: int(x * -100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'rx': {'event_name': 'AXIS2', 'mapfunc': lambda x: int(x * 100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'ry': {'event_name': 'AXIS3', 'mapfunc': lambda x: int(x * -100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+
+    }
 
     JOYSTICK_NAME_MAPPINGS = {
         "Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,                               # Mac
         "Performance Designed Products Rock Candy Wireless Gamepad for PS3": ROCKCANDY_MAPPING,  # Pi
         "Nimbus" : NIMBUS_MAPPING,
         "PLAYSTATION(R)3 Controller": PS3_MAPPING,
+        "Wireless 360 Controller": XB360_MAPPING,
+        "Xbox 360 Wired Controller": XB360_MAPPING,
     }
 
     try:
