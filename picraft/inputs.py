@@ -41,8 +41,18 @@ if USE_EVENT:
         'ry': {'event_name': 'ABS_RZ', 'mapfunc': lambda x: arduino_map(x, 0, 255, 100, -100) if abs(x-128)> ROCKCANDY_AXIS_DEADZONE else 0},
     }
 
+    XB360_AXIS_DEADZONE = 500
+    XB360_MAPPING = {
+        'lx': {'event_name': 'ABS_X', 'mapfunc': lambda x: arduino_map(x, -32768, 32767, -100,  100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'ly': {'event_name': 'ABS_Y', 'mapfunc': lambda x: arduino_map(x, -32768, 32767,  100, -100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'rx': {'event_name': 'ABS_RX','mapfunc': lambda x: arduino_map(x, -32768, 32767, -100,  100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+        'ry': {'event_name': 'ABS_RY','mapfunc': lambda x: arduino_map(x, -32768, 32767,  100, -100) if abs(x) > XB360_AXIS_DEADZONE else 0},
+    }
+
     VENDOR_PRODUCT_MAPPINGS = {
         "3695:296": ROCKCANDY_MAPPING,
+        "1118:654": XB360_MAPPING,          # Wired XBox360
+        "1118:673": XB360_MAPPING,          # Wireless XBox360
     }
 
     class InputController:
@@ -152,7 +162,8 @@ elif USE_PYGAME:
         "Nimbus" : NIMBUS_MAPPING,
         "PLAYSTATION(R)3 Controller": PS3_MAPPING,
         "Wireless 360 Controller": XB360_MAPPING,
-        "Xbox 360 Wired Controller": XB360_MAPPING,
+        "Xbox 360 Wired Controller": XB360_MAPPING,         # Mac
+        "Microsoft X-Box 360 pad": XB360_MAPPING,           # Pi
     }
 
     try:
