@@ -74,6 +74,7 @@ def constrain(val, min_val, max_val):
 
 
 class CountdownTimer:
+    """A resetable coundown timer that executes a callback when the timer expires."""
 
     def __init__(self, on_expiry_callback=None, interval_secs=3):
         self.keep_running = False
@@ -98,7 +99,7 @@ class CountdownTimer:
 
 
     def reset(self):
-        self.exipry_time = int(round(time() )) + self.interval_secs
+        self.exipry_time = int(round(time())) + self.interval_secs
         self.expired = False
 
 

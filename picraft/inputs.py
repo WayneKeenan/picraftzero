@@ -35,10 +35,10 @@ if USE_EVENT:
 
     ROCKCANDY_AXIS_DEADZONE = 5
     ROCKCANDY_MAPPING = {
-        'lx': {'event_name': 'ABS_X', 'mapfunc': lambda x: arduino_map(x, 0, 255, -100,  100) if abs(x-128)> ROCKCANDY_AXIS_DEADZONE else 0},
-        'ly': {'event_name': 'ABS_Y', 'mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128)> ROCKCANDY_AXIS_DEADZONE else 0},
-        'rx': {'event_name': 'ABS_Z', 'mapfunc': lambda x: arduino_map(x, 0, 255, -100,  100) if abs(x-128)> ROCKCANDY_AXIS_DEADZONE else 0},
-        'ry': {'event_name': 'ABS_RZ','mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128)> ROCKCANDY_AXIS_DEADZONE else 0},
+        'lx': {'event_name': 'ABS_X', 'mapfunc': lambda x: arduino_map(x, 0, 255, -100,  100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
+        'ly': {'event_name': 'ABS_Y', 'mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
+        'rx': {'event_name': 'ABS_Z', 'mapfunc': lambda x: arduino_map(x, 0, 255, -100,  100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
+        'ry': {'event_name': 'ABS_RZ','mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
     }
 
     XB360_AXIS_DEADZONE = 500
@@ -208,7 +208,7 @@ elif USE_PYGAME:
                 sleep(0.01)
 
         def _process_events(self, events):
-            # TODO: to place nicely with other toys in the future this really should be fed from a global event loop
+            # TODO: to play nicely with other toys in the future this really should be fed from a global event loop
             for e in events:
                 logger.debug("Joystick event: {}".format(e))
                 if e.type == JOYAXISMOTION:
