@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from pip.req import parse_requirements
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-version = "0.0.1"
+version = "0.1.0"
 
 install_requires = parse_requirements("requirements.txt")
 tests_require = []
