@@ -2,8 +2,9 @@ import threading
 import logging
 from .utils import arduino_map
 
-USE_EVENT = False
-USE_PYGAME = False
+HAVE_EVENT = False
+HAVE_PYGAME = False
+HAVE_BLUEDOT = False
 
 logger = logging.getLogger(__name__)
 
@@ -18,19 +19,53 @@ logger = logging.getLogger(__name__)
 try:
     from evdev import InputDevice, categorize, AbsEvent, list_devices
     from evdev.ecodes import KEY, SYN, REL, ABS
-    USE_EVENT = True
+    HAVE_EVENT = True
 except ImportError:
-    try:
-        import pygame
-        from pygame.locals import *
-        USE_PYGAME = True
-    except ImportError:
-        logger.warning("InputController failing back to stub implementation")
+    logger.info("InputController Event libraries not found")
+    HAVE_EVENT = False
+
+try:
+    import pygame
+    from pygame.locals import *
+    HAVE_PYGAME = True
+except ImportError:
+    logger.info("InputController PyGame libraries not found")
+    HAVE_PYGAME = False
 
 
+try:
+    from bluedot import BlueDot
+    HAVE_BLUEDOT = True
+except ImportError:
+    logger.info("InputController BlueDot libraries not found")
+    HAVE_BLUEDOT = False
 
 # ---------------------------------------------------------------------------------------------------------
-if USE_EVENT:
+if HAVE_BLUEDOT:
+    logger.info("InputController using BlueDot implementation")
+    logger.warning("Only 1 Joystick axis will be aviailable")
+
+
+    class InputController:
+        def __init__(self, controller_id=0):
+            self.bd = BlueDot()
+
+        def stop(self):
+            pass
+
+        def get_value(self, name):
+            value = 0
+            if name == 'rx':
+                value =  self.bd.position.x
+            elif name == 'ry':
+                value = self.bd.position.y
+
+            return value
+
+        def add_listener(self, func):
+            self.bd.when_moved = lambda x: func(self)
+
+elif HAVE_EVENT:
     logger.info("InputController using Event implementation")
 
     ROCKCANDY_AXIS_DEADZONE = 5
@@ -111,7 +146,7 @@ if USE_EVENT:
             return value
 
 # ---------------------------------------------------------------------------------------------------------
-elif USE_PYGAME:
+elif HAVE_PYGAME:
     logger.info("InputController using PyGame implementation")
 
     from time import sleep
@@ -235,6 +270,7 @@ elif USE_PYGAME:
 
 # ---------------------------------------------------------------------------------------------------------
 else: #Stub
+    logger.warning("InputController failing back to stub implementation")
 
     class InputController:
 
