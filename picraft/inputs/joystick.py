@@ -1,6 +1,10 @@
 import threading
 import logging
-from .utils import arduino_map
+from picraft.utils import arduino_map
+
+USE_EVENT = True
+USE_PYGAME = True
+USE_BLUEDOT = False
 
 HAVE_EVENT = False
 HAVE_PYGAME = False
@@ -41,7 +45,7 @@ except ImportError:
     HAVE_BLUEDOT = False
 
 # ---------------------------------------------------------------------------------------------------------
-if HAVE_BLUEDOT:
+if HAVE_BLUEDOT and USE_BLUEDOT:
     logger.info("InputController using BlueDot implementation")
     logger.warning("Only 1 Joystick axis will be aviailable")
 
@@ -65,7 +69,7 @@ if HAVE_BLUEDOT:
         def add_listener(self, func):
             self.bd.when_moved = lambda x: func(self)
 
-elif HAVE_EVENT:
+elif HAVE_EVENT and USE_EVENT:
     logger.info("InputController using Event implementation")
 
     ROCKCANDY_AXIS_DEADZONE = 5
@@ -146,11 +150,11 @@ elif HAVE_EVENT:
             return value
 
 # ---------------------------------------------------------------------------------------------------------
-elif HAVE_PYGAME:
+elif HAVE_PYGAME and USE_PYGAME:
     logger.info("InputController using PyGame implementation")
 
     from time import sleep
-    from .utils import mainthread_dispatch
+    from picraft.utils import mainthread_dispatch
 
     ROCKCANDY_AXIS_DEADZONE = 0.05
 
