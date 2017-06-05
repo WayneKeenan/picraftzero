@@ -21,7 +21,7 @@ grep -q '^dtparam=i2c1_arm' $CONFIG && sed -i 's/^dtparam=i2c1_arm.*/dtparam=i2c
 
 # Pimoroni Explorer pHAT
 
-#sudo pip3 install cap1xxx
+sudo pip3 install cap1xxx
 
 # Video stremaing
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -

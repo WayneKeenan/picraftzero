@@ -189,7 +189,8 @@ try:
     import smbus
     HAVE_SMBUS = True
 except ModuleNotFoundError:
-    logger.warn("smbus library not found, maybe not installed? maybe running on Mac/Windows?")
+    logger.warning("smbus library not found, maybe not installed? maybe running on Mac/Windows?")
+
 
 def i2c_scan(bus_num=1):
     global HAVE_SMBUS

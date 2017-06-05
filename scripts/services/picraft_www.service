@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-Environment=PYTHONPATH=/opt/bubbleworks/picraft
-WorkingDirectory=/opt/bubbleworks/picraft/
+Environment=PYTHONPATH=/home/pi/bubbleworks/picraft
+WorkingDirectory=/home/pi/bubbleworks/picraft
 ExecStart=/usr/bin/python3 main.py
 Restart=always
 RestartSec=3

@@ -13,6 +13,7 @@
 
     BubbleworksHMD.HeadLook = 'headlook';
     BubbleworksHMD.Gyro = 'gyro';
+    BubbleworksHMD.GyroActive = 'gyro_status';
 
 
     // Private
@@ -361,6 +362,7 @@
     BubbleworksHMD.prototype.gyro_button_pressed = function (event) {
         var self = this;
         self._use_gyro = !self._use_gyro;
+        self.emit(BubbleworksHMD.GyroActive, self._use_gyro);
         self.update_display();
     };
 

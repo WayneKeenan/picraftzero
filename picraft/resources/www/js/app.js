@@ -3,9 +3,12 @@
     // Libraries
     var picraft, ws, log, hmd, inputs;
 
+    var X_INC = 1;
+    var Y_INC = 1;
 
     var current_view = 1;
     var lx=0, ly=0, rx=0, ry=0;
+    var send_joypad_updates = true;
     // ----------------------------------------------------------------------------------------------------
     // Init
 
@@ -22,6 +25,7 @@
 
         hmd = new BubbleworksHMD(opts.hmd);
         hmd.on(BubbleworksHMD.HeadLook, on_headlook);
+        hmd.on(BubbleworksHMD.GyroActive, on_gyro_state_change);
         hmd.start();
 
 
@@ -47,25 +51,25 @@
 
     function move_up() {
         //send_joypad_axis(0, 0, 100);
-        current_view === 1 ? ly -= 10 : ry -= 10;
+        current_view === 1 ? ly -= Y_INC : ry -= Y_INC;
         hmd.set_view_offsets(lx, ly, rx, ry);
         console.log(lx, ly, rx, ry);
     }
      function move_down() {
         //send_joypad_axis(0, 0, -100);
-        current_view === 1 ? ly += 10 : ry += 10;
+        current_view === 1 ? ly += Y_INC : ry += Y_INC;
         hmd.set_view_offsets(lx, ly, rx, ry);
         console.log(lx, ly, rx, ry);
     }
    function move_right() {
         //send_joypad_axis(0, 100, 0);
-        current_view === 1 ? lx += 10 : rx += 10;
+        current_view === 1 ? lx += X_INC : rx += X_INC;
         hmd.set_view_offsets(lx, ly, rx, ry);
         console.log(lx, ly, rx, ry);
     }
     function move_left() {
         //send_joypad_axis(0, -100, 0);
-        current_view === 1 ? lx -= 10 : rx -= 10;
+        current_view === 1 ? lx -= X_INC : rx -= X_INC;
         hmd.set_view_offsets(lx, ly, rx, ry);
         console.log(lx, ly, rx, ry);
     }
@@ -137,13 +141,18 @@
         send_pan_tilt_update(yaw, pitch);
     }
 
+    function on_gyro_state_change(state) {
+        send_joypad_updates = !state;
+    }
 
     // ----------------------------------------------------------------------------------------------------
     // WebSocket message handling
 
     function send_joypad_axis(joystick_id, x_axis, y_axis) {
-        log.DEBUG('Joystick :' + joystick_id + " = (" + x_axis + ", " + y_axis + ")");
-        ws.send_message('JOYSTICK', joystick_id, [x_axis, y_axis]);
+        if (send_joypad_updates) {
+            log.DEBUG('Joystick :' + joystick_id + " = (" + x_axis + ", " + y_axis + ")");
+            ws.send_message('JOYSTICK', joystick_id, [x_axis, y_axis]);
+        }
     }
 
     function send_pan_tilt_update(pan_angle, tilt_angle) {

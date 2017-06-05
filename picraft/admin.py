@@ -7,7 +7,7 @@ import threading
 from picraft.config import get_config
 
 
-# see: https://pymotw.com/2/threading/
+p# see: https://pymotw.com/2/threading/
 
 logging.basicConfig(level=logging.INFO,
                     format='(%(threadName)-10s) %(message)s',

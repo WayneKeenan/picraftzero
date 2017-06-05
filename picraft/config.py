@@ -33,8 +33,8 @@ DEFAULT_CONFIG = {
 
         'hosts_services_mapping':{
             'cam0.local': ['uv4l_raspicam'],
-            'cam1.local': ['uv4l_raspicam', 'picraft_www'],
-            'tiny4wd.local': ['uv4l_raspicam', 'picraft_www'],
+            'cam1.local': ['uv4l_raspicam'],
+            'tiny4wd.local': ['picraft_www'],
         },
     },
 
@@ -57,12 +57,12 @@ DEFAULT_CONFIG = {
         'iconbar_element': 'icon-bar',  # TODO: move to web layer
         'camera_left_url':  "http://cam0.local:8080/stream/video.mjpeg",
         'camera_right_url': "http://cam1.local:8080/stream/video.mjpeg",
-        'camera_mono_url':  "http://tiny4wd.local:8080/stream/video.mjpeg",
+        'camera_mono_url':  "http://cam0.local:8080/stream/video.mjpeg",
         #'camera_mono_url':  "http://" + IP_ADDR + ":8080/stream/video.mjpeg",
+        'camera_view_lx': 13,
         'camera_view_ly': 40,
-        'camera_view_ry': 60,
-        'camera_view_lx': -10,
         'camera_view_rx': 20,
+        'camera_view_ry': 60,
 },
 
     'pantilt': {

@@ -19,7 +19,7 @@ from gpiozero.devices import Device, CompositeDevice
 
 from .servers import HTTPServer, WebSocketServer as WSS
 from .utils import arduino_map, main_loop
-from .inputs import InputController
+from .inputs.joystick import InputController
 from .providers import get_motor_provider, get_servo_provider
 
 
