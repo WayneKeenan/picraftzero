@@ -25,8 +25,8 @@ def find_devices_and_import():
     from .servo import Default as Servo
 
     if PICONZERO_I2C_DEVICE_ID in devices:
-        from .motor.piconzero import PiconzeroMotor as Servo
-        from .servo.piconzero import PiconzeroServo as Motor
+        from .motor.piconzero import PiconzeroMotor as Motor
+        from .servo.piconzero import PiconzeroServo as Servo
     else:
         if PIMORONI_PANTILT_HAT_I2C_DEVICE_ID in devices:
             from .servo.pimoroniservo import PimoroniPanTiltServo as Servo

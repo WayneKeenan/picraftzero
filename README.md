@@ -15,29 +15,65 @@ This is a prototype and all feedback is welcomed, please raise a [GitHub issue](
 Quick Start
 ===========
 
+This quick start is for the impatient to kick the tyres ASAP and check that things are ok, but, *please* read the notes section below too.
+
 The current installation process isn't too flexible at the moment, please follow the instructions very closely.
 
-Install pre-requisites:
+
+Install software pre-requisites:
 ```
 sudo apt-get install -y libav-tools python3-picamera python3-ws4py
 ```
 
-Download the Git repo:
+Download PiCraftZero from the Git repo:
  
-```cd /home/pi
+```bash
+cd /home/pi
 mkdir bubbleworks
 cd bubbleworks
-git clone https://github.com/WayneKeenan/
+git clone https://github.com/WayneKeenan/picraftzero
 ```
 
+
 Run example:
-````
+
+
+```bash
 cd picraftzero
-python3 examples/tiny4wd.py
+PYTHONPATH=. python3  examples/tiny4wd.py
 ```
+
+You will see some logging to the console.
+If you have a pimoroni Explorer pHAT attached you should see:
+
+```Explorer pHAT detected...```
+
+
+If you have a Piconzero attached you should see:
+
+```Piconzero pHAT detected...```
+
 
 
 Open a web browser to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
+
+The right hand side of the screen is virtual joystick 0 (usually used for motor control)
+The left hand side of the screen is virtual joystick 1 (usually used for pan/tilt control)
+
+If you move the joysticks around then things should happen...
+
+Notes
+=====
+
+After the quickstart runs ok then there improvements that can be made for better video streaming (using uv4l) and to run PicraftZero as a systemd service that automatically starts on boot. Docmeten her [TBD, add readthedocs url]
+
+
+Installation hardware pre-requisites:
+
+To control motors and servos the Pi should have a Pimoroni Explorer pHAT or 4Tronix Piconzer attached to the Pi, although this is not mandatory for PiCraftZero to operate. (At the time of writing the Explorer pHAT is the more tested PiCraftZero code path)
+
+If you have a RockCandy controller connect it before running the code, not mandatory as there are WebBrowser based virtual joysticks.
+If you have a camera, you should have attached it before starting the Pi, this is optional.
 
 
 

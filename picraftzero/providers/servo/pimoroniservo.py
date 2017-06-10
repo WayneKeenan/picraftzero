@@ -16,7 +16,7 @@ try:
 
     # has its own idle timout (deafult 2 seconds)
 except OSError:
-    logger.warn("FAiled to intiialied Pimoroni PanTilt HAT, is it attached?")
+    logger.warn("Failed to initialise Pimoroni PanTilt HAT, is it attached?")
 
 # TOOD: add a 'dummy' class if HAVE_PANTILT False , to remove   the 'if not HAVE_PANTILT' nonsense.
 

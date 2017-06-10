@@ -45,7 +45,7 @@ class MotorProvider:
 
     @abc.abstractmethod
     def set_speed(self, speed):
-        """Set the motors speed..  range  -127 .. 127.
+        """Set the motors speed..  range  -100 .. 100.
         """
         raise NotImplementedError
 

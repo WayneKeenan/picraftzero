@@ -1,8 +1,6 @@
 
 from picraftzero.interfaces.hardware.providers import ServoProvider
-
-import logging
-logger = logging.getLogger(__name__)
+from picraftzero.log import logger
 
 class Default(ServoProvider):
     def __init__(self, servo_id):
