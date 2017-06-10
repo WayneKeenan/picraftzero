@@ -1,17 +1,16 @@
 import os
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 version = "0.1.0"
 
-install_requires = parse_requirements("requirements.txt")
+install_requires = []       # optional: #cap1xxx==0.1.3 evdev==0.6.4
 tests_require = []
 
 setup(
     name='picraftzero',
     version=version,
-    description="A library for bulding robots",
+    description="A library for building universal controls for robots",
     long_description="\n\n".join([
         open(os.path.join(base_dir, "README.md"), "r").read(),
     ]),

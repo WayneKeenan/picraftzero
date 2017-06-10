@@ -1,66 +1,43 @@
 PiCraftZero
 ===========
 
-A simple Python interface for controlling robots with physical and virtual controllers. 
-Optionally with camera video streaming for mono and stero vision.
-
-
-Goal
-====
-Make creating remote cntroles for robots easy and 
-
-
-
-
-What can it do?
-===============
-
-
-
-
-Controller Use cases:
-
-Motor control only (No Pan Tilt)
-1. robot  +  rock candy 
-2. robot  +  iPhone
-3. robot  +  android tablet
-4. robot  +  iPhone + Bluetooth Classic Keyboard
-5. robot  +  iPhone + 8bitdo (Joypad appears as a Bluetooth Classic Keyboard)
-6. robot  +  iPhone + BLE joypad
-
-Motor and  Pan/Tilt  - Single Camera
-1. robot  +  rock candy
-2. robot  +  iPhone
-3. robot  +  android tablet
-4. robot  +  iPhone / BLE joypad
-
-
-Motor and  Pan/Tilt  - Single Camera + VR HMD
-1. robot + rock candy + google cardboard 
-
-Motor and  Pan/Tilt  - Dual Camera + VR HMD
-1. robot + rock candy + google cardboard
-
-
-Autodetected i2c motor drivers (Explorer pHAT)
-
-Based on GPIOZero flow based programming model (source/values)
-
+A simple Python interface for controlling robots using multiple types of physical and virtual controllers. 
+Optionally supports camera video streaming for mono and stereo vision. Stereo viewer supports using a Google cardboard viewer and can use the phone's orientation to control a pan & tilt camera mount..
 
 
 Status
 ======
-This is an early-stage experiment that I'm are developing out in the wild.
-This *currently* may only be of interest to brave developers and end-users looking to provide feedback and/or to contribute.
+
+This is a prototype and all feedback is welcomed, please raise a [GitHub issue]() for requests and bug reports.
 
 
 
-Installation
-============
+Quick Start
+===========
+
+The current installation process isn't too flexible at the moment, please follow the instructions very closely.
+
+Install pre-requisites:
+```
+sudo apt-get install -y libav-tools python3-picamera python3-ws4py
+```
+
+Download the Git repo:
+ 
+```cd /home/pi
+mkdir bubbleworks
+cd bubbleworks
+git clone https://github.com/WayneKeenan/
+```
+
+Run example:
+````
+cd picraftzero
+python3 examples/tiny4wd.py
+```
 
 
-git clone 
-
+Open a web browser to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
 
 
 
@@ -68,55 +45,59 @@ Examples
 ========
 
 
-The public interface of PiCraftZero can be considered to just be:
+simple.py
+*********
+
+A basic robot that has 2 motors.
+This example can be found [here](examples/tiny4wd.py).
+
+
+```python
+from picraftzero import Joystick, Wheelbase, steering_mixer, start
+
+joystick= Joystick()                         
+motors = Wheelbase(left=0, right=1)  
+
+motors.source = steering_mixer(joystick.values)
+
+start()
+```
+
+pantilt.py
+**********
+
+
+A basic robot that has 2 motors and a pan & tilt camera fitted.
+The right hand side joystick on the physical or virtual (web page) joystick cotnrols the motors.
+The left hand side joystick on the physical or virtual (web page) joystick cotnrols the pan/tilt.
+
+If a cameara, or 2, is attached then there will be streaming video.
+If the browser is on a phone then gyro reading can be sent to the Pi to control the pan/tilt servos.  This is especually useful when the phone is put in a Google Cardboard viewer as the pan/tilt servo will track your head movements.
  
-1. On the server (Pi Robots) side: picraft/zero.py and picraft/picraft.cfg
-2. On the client (Virtual Joystick/Viewer/HMD): resources/www/js/app.js, resources/www/js/lib/bubbleworks/*.js
-
-
-Main
-----
-
-main.py
-*******
-
-
-
-tiny4wd.py
-***********
-
-
-
-
-
-
-
-Classic Blue not o iOS
-BLE on iOS and Android bt effectively not yet on RPi
-
-Wifi is the common denominator and (currently) better suited to video streaming.
-
-
-Code:
-
-1. Local Joystick + Motors
-2. Local Joystick + Remote Joystick + Motors
-3. Local Joystick + Remote Joystick + Motors + Servos
  
+This example can be found [here](examples/pantilt.py)
 
 
-Acknowkledgements
-=================
+```python
 
-GPIO Zero - Bun NuttallDave
+from picraftzero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start, filter_messages, MessageReceiver, join_values
 
-piStremaing
-u4vl - 
+joystick_right= Joystick(0)
+joystick_left = Joystick(1)
 
-MOtor Srivers: Phil @ Pimoroing & 4Tronix
- 
-JS Libs
-Gyro,
-Virtual Joystick
+messages = MessageReceiver(port=8001)
 
-Pgame
+wheelbase = Wheelbase(left=0, right=1) 
+pan_tilt = PanTilt(pan=0, tilt=1)      
+
+wheelbase.source = steering_mixer(joystick_right.values)
+pan_tilt.source =  join_values(
+    filter_messages(messages.values, type='PANTILT', id=0),
+    scaled_pair(joystick_left.values, 180, 0, -100, 100)
+)
+
+
+start()
+```
+
+

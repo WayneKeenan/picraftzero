@@ -1,0 +1,131 @@
+* { margin: 0; padding: 0; }
+
+
+.container {
+    width		: 100%;
+    height		: 100%;
+    overflow	: hidden;
+    padding		: 0;
+    margin		: 0;
+    background-color: #000000;
+    -webkit-user-select	: none;
+    -moz-user-select	: none;
+
+}
+
+.left, .right {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    background-color: #000000;
+    padding		: 0;
+    margin		: 0;
+}
+
+.single {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+}
+
+.left  { left: 0;}
+.right { right: 0;}
+
+
+.fillview {
+    width: 100%; height: 100%; margin: 0em;
+            left: 0em; bottom: 0em; background: black;
+            position: fixed;
+            z-index: -1;
+}
+
+
+body {
+   margin:0px;
+   background-color: #000000;
+
+}
+
+
+/* see: https://www.w3schools.com/howto/howto_css_icon_bar.asp */
+
+.icon-bar {
+    position:absolute;
+    width: 100%; /* Full-width */
+    background-color: #555; /* Dark-grey background */
+    overflow: auto; /* Overflow due to float */
+    bottom: 0;
+    left: 0;
+}
+
+.icon-bar a {
+    float: left; /* Float links side by side */
+    text-align: center; /* Center-align text */
+    width: 20%; /* Equal width (5 icons with 20% width each = 100%)
+    padding: 12px 0; /* Some top and bottom padding */
+    transition: all 0.3s ease; /* Add transition for hover effects */
+    color: white; /* White text color */
+    font-size: 36px; /* Increased font size */
+}
+
+.icon-bar a:hover {
+/*    background-color: #000; /* Add a hover color */
+}
+
+.active {
+    /*background-color: #4CAF50; /* Add an active/current color */
+}
+
+.inactive {
+/*    background-color: #555; /* Dark-grey background */
+}
+
+
+/* see: http://stackoverflow.com/questions/20353907/how-to-stack-overlap-more-than-2-icons-in-font-awesome */
+
+.icon-stack {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 1em;
+  line-height: 1em;
+  vertical-align: middle;
+
+}
+.icon-stack-1x,
+.icon-stack-2x,
+.icon-stack-3x {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+.icon-stack-1x {
+  line-height: inherit;
+}
+.icon-stack-2x {
+  font-size: 1.5em;
+}
+.icon-stack-3x {
+  font-size: 2em;
+}
+/*
+  <span class="icon-stack fa-1x">
+   <i class="fa fa-power-off icon-stack-1x"></i>
+   <i class="fa fa-camera icon-stack-1x"></i>
+</span>
+*/
+
+
+
+#warning-message { display: none;  }
+
+@media only screen and (orientation:portrait){
+    #wrapper { display:none; }
+    #warning-message { display:block; }
+}
+@media only screen and (orientation:landscape){
+    #warning-message { display:none; }
+}
+

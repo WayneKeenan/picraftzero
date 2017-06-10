@@ -6,8 +6,8 @@ After=network.target
 Type=simple
 User=root
 Environment=PYTHONPATH=/home/pi/bubbleworks/picraft
-WorkingDirectory=/home/pi/bubbleworks/picraft
-ExecStart=/usr/bin/python3 main.py
+WorkingDirectory=/home/pi/bubbleworks/picraft/examples
+ExecStart=/usr/bin/python3 pantilt.py
 Restart=always
 RestartSec=3
 
