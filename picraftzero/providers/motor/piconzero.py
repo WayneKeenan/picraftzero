@@ -14,6 +14,7 @@ class PiconzeroMotor(MotorProvider):
 
     def __init__(self, motor_id):
         self.motor_id = motor_id
+        self._last_speed = None
         pz.init()
 
 
@@ -25,7 +26,13 @@ class PiconzeroMotor(MotorProvider):
 
     #@dedupe
     def set_speed(self, speed):
-        logger.debug("set_speed({}, {})".format(self.motor_id, speed))
+        msg = "set_speed({}, {})".format(self.motor_id, speed)
+        logger.debug(msg)
+        if speed == self._last_speed:
+            return
+        self._last_speed = speed
+        logger.info(msg)
+
         speed = constrain(speed, -100, 100)
         pz.setMotor(self.motor_id, speed)
 

@@ -17,6 +17,7 @@ class PiconzeroServo(ServoProvider):
         self.servo_id = servo_id
         pz.init()
         pz.setOutputConfig(self.servo_id, 2)      # Set output mode to Servo
+        logger.info("Servo {} created".format(self.servo_id))
 
     def begin(self):
         pass
@@ -27,10 +28,12 @@ class PiconzeroServo(ServoProvider):
 
     #@dedupe
     def set_angle(self, angle):
+        msg = "Set Angle {}".format(angle)
+        logger.debug(msg)
         if angle == self.last_angle:
             return
         self.last_angle = angle
-        logger.debug("Set Angle {}".format(angle))
+        logger.info(msg)
         pz.setOutput(self.servo_id, angle)
 
     def attach(self):

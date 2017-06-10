@@ -8,6 +8,7 @@ class Default(MotorProvider):
 
     def __init__(self, motor_id):
         self._motor_id = motor_id
+        self._last_speed = None
 
     def begin(self):
         pass
@@ -16,5 +17,9 @@ class Default(MotorProvider):
         pass
 
     def set_speed(self, speed):
-        logger.debug("DefaultMotorProvider({}).set_speed({})".format(self._motor_id, speed))
-
+        msg = "DefaultMotorProvider({}).set_speed({})".format(self._motor_id, speed)
+        logger.debug(msg)
+        if speed == self._last_speed:
+            return
+        logger.info(msg)
+        self._last_speed = speed

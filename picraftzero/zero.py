@@ -21,6 +21,7 @@ from .utils import arduino_map, main_loop
 from .inputs.joystick import InputController
 from .providers import get_motor_provider, get_servo_provider
 
+from .log import logger
 
 #formatter = logging.Formatter(LOG_FORMAT)
 #rotating_log_handler = TimedRotatingFileHandler('picraftzero.log',

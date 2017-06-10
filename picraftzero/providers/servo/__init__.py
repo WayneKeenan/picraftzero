@@ -15,9 +15,11 @@ class Default(ServoProvider):
         pass
 
     def set_angle(self, angle):
-        logger.debug("DefaultServoProvider({}).set_angle({})".format(self._servo_id, angle))
+        msg = "DefaultServoProvider({}).set_angle({})".format(self._servo_id, angle)
+        logger.debug(msg)
         if angle == self.last_angle:
             return
+        logger.info(msg)
         self.last_angle = angle
 
     def attach(self):

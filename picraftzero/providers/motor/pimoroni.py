@@ -20,6 +20,7 @@ class PimoroniExplorerHatMotor(MotorProvider):
         self.motor_id = motor_id
 
 
+
     def begin(self):
         pass
 
@@ -28,9 +29,11 @@ class PimoroniExplorerHatMotor(MotorProvider):
 
     #@dedupe
     def set_speed(self, speed):
-        logger.debug("set_speed({}, {})".format(self.motor_id, speed))
+        msg = "set_speed({}, {})".format(self.motor_id, speed)
+        logger.debug(msg)
 
         speed = constrain(speed, -100, 100)
+
         try:
             PimoroniExplorerHatMotor.motors[self.motor_id].speed(speed)
             pass

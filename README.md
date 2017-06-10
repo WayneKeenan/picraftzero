@@ -51,7 +51,7 @@ If you have a pimoroni Explorer pHAT attached you should see:
 
 If you have a Piconzero attached you should see:
 
-```Piconzero pHAT detected...```
+```i2c devices detected: [34]```  (nice eh!)
 
 
 
@@ -72,9 +72,9 @@ Installation hardware pre-requisites:
 
 To control motors and servos the Pi should have a Pimoroni Explorer pHAT or 4Tronix Piconzer attached to the Pi, although this is not mandatory for PiCraftZero to operate. (At the time of writing the Explorer pHAT is the more tested PiCraftZero code path)
 
-If you have a RockCandy controller connect it before running the code, not mandatory as there are WebBrowser based virtual joysticks.
 If you have a camera, you should have attached it before starting the Pi, this is optional.
 
+If you have a RockCandy controller connect it before running the code, not mandatory as there are WebBrowser based virtual joysticks.
 
 
 Examples
@@ -107,8 +107,8 @@ A basic robot that has 2 motors and a pan & tilt camera fitted.
 The right hand side joystick on the physical or virtual (web page) joystick cotnrols the motors.
 The left hand side joystick on the physical or virtual (web page) joystick cotnrols the pan/tilt.
 
-If a cameara, or 2, is attached then there will be streaming video.
-If the browser is on a phone then gyro reading can be sent to the Pi to control the pan/tilt servos.  This is especually useful when the phone is put in a Google Cardboard viewer as the pan/tilt servo will track your head movements.
+If a camera, or 2, is attached then there can be streaming video available.
+If the browser is on a phone then the gyro readings from it can be sent to the Pi to control the pan/tilt servos.  This is useful when the phone is put into a Google Cardboard viewer, the pan/tilt servo will track your head movements.
  
  
 This example can be found [here](examples/pantilt.py)
