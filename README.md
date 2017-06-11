@@ -139,3 +139,70 @@ start()
 ```
 
 
+Enhancements
+============
+
+Camera Streaming
+================
+
+
+```bash
+curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
+echo 'deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ jessie main' | sudo tee --append /etc/apt/sources.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
+sudo cp scripts/uv4l-raspicam.conf /etc/uv4l/
+sudo service uv4l_raspicam restart
+sudo service uv4l_raspicam status
+```
+
+Check the output and look for: 
+```   Active: active (running)```
+
+
+```bash
+cd ~/bubbleworks/picraftzero/
+nano picraftzero/config.py
+```
+
+Change the `DEFAULT_MONO_URL` at the top of the file to look like this
+
+```python
+DEFAULT_MONO_URL="http://raspberrypi.local:8080/stream/video.mjpeg"
+#DEFAULT_MONO_URL="ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
+```
+
+Change `raspberrypi.local' to the hostname or IP of your Pi.
+
+
+Running as a service
+====================
+
+
+```bash
+cd  ~/bubbleworks/picraftzero/
+sudo ./scripts/install_service.sh  scripts/services/picraftzero_www.service
+```
+
+To follow the logs type:
+
+```bash
+sudo journalctl -f -u picraftzero_www.service
+```
+
+
+
+To stop, start or restart the service:
+
+```bash
+sudo systemctl stop picraftzero_www
+sudo systemctl start picraftzero_www
+sudo systemctl restart picraftzero_www
+```
+
+
+
+Bonjour/Zeroconf
+================
+
+Adding [Apples Bonjour Print services](https://support.apple.com/kb/dl999?locale=en_GB) is optional but makes connecting to Pi's so much easier on Windows, it lets you use names line 'raspberypi.local'.  (The Pi has Bonjour installed by default these days)

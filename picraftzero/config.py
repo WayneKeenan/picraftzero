@@ -6,6 +6,11 @@ from pprint import pformat
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_MONO_URL="ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
+#DEFAULT_MONO_URL="http://tiny4wd.local:8080/stream/video.mjpeg"
+
+
+
 CONFIG_FILES = [
                 "./picraft.cfg",
                 "../picraft.cfg",
@@ -53,7 +58,8 @@ DEFAULT_CONFIG = {
         #'camera_left_url':  "http://cam0.local:8080/stream/video.mjpeg",
         #'camera_right_url': "http://cam1.local:8080/stream/video.mjpeg",
         #'camera_mono_url':  "http://tiny4wd.local:8080/stream/video.mjpeg",
-        'camera_mono_url':  "ws://${WINDOW_LOCATION_HOSTNAME}:8084/",  # default to the PiStreaming server
+        #'camera_mono_url':  "ws://${WINDOW_LOCATION_HOSTNAME}:8084/",  # default to the PiStreaming server
+        'camera_mono_url': DEFAULT_MONO_URL,
         'camera_view_lx': 13,
         'camera_view_ly': 40,
         'camera_view_rx': 20,

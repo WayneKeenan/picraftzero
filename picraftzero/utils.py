@@ -148,6 +148,7 @@ def default_steering(inThrottle, inYaw):
 def differential_steering(nJoyY, nJoyX, axis_max=100.0):
     fPivYLimit = 32.0
 
+    nJoyY = -nJoyY # TODO: global config
     # TEMP VARIABLES
     nMotPremixL = 0    #Motor (left)  premixed output         (-128..+127)
     nMotPremixR = 0    # Motor (right) premixed output        (-128..+127)

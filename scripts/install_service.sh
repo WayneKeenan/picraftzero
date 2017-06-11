@@ -32,7 +32,7 @@ systemctl start $SERVICE
 systemctl daemon-reload
 
 sleep 3
-#journalctl -u $SERVICE.service
+sudo journalctl -u ${SERVICE}.service
 
 systemctl status $SERVICE
 
