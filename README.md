@@ -145,6 +145,7 @@ Enhancements
 Camera Streaming
 ================
 
+This replace the default camera streaming with a much lower latency version:
 
 ```bash
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
@@ -159,29 +160,31 @@ sudo service uv4l_raspicam status
 Check the output and look for: 
 ```   Active: active (running)```
 
+You can test it's running by going to [http://raspberrypi.local:8080/stream](http://raspberrypi.local:8080/stream)
+
+
 
 ```bash
 cd ~/bubbleworks/picraftzero/
 nano picraftzero/config.py
 ```
 
-Change the `DEFAULT_MONO_URL` at the top of the file to look like this
+Set the `USE_UV4L` to `True`
 
-```python
-DEFAULT_MONO_URL="http://raspberrypi.local:8080/stream/video.mjpeg"
-#DEFAULT_MONO_URL="ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
-```
+You will need to re-run the example python script.
 
-Change `raspberrypi.local' to the hostname or IP of your Pi.
+If you want to stop the camera service type:
 
+```sudo systemctl stop uv4l_raspicam```
 
 Running as a service
 ====================
 
+This will run the `pantilt.py` example every boot.
 
 ```bash
 cd  ~/bubbleworks/picraftzero/
-sudo ./scripts/install_service.sh  scripts/services/picraftzero_www.service
+sudo sh ./scripts/install_service.sh  scripts/services/picraftzero_www.service
 ```
 
 To follow the logs type:

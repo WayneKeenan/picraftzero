@@ -6,8 +6,13 @@ from pprint import pformat
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_MONO_URL="ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
-#DEFAULT_MONO_URL="http://tiny4wd.local:8080/stream/video.mjpeg"
+USE_UV4L = False
+
+
+if USE_UV4L:
+    DEFAULT_MONO_URL="http://${WINDOW_LOCATION_HOSTNAME}:8080/stream/video.mjpeg"
+else:
+    DEFAULT_MONO_URL = "ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
 
 
 
