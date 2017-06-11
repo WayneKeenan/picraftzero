@@ -1,3 +1,4 @@
+import os
 import threading
 import logging
 from picraftzero.utils import arduino_map
@@ -202,8 +203,37 @@ elif HAVE_PYGAME and USE_PYGAME:
         "Microsoft X-Box 360 pad": XB360_MAPPING,           # Pi
     }
 
+
+    # Make an attempt to setup video in order to get the event sub-system up and running
+    # TODO: This assumes always headless, users may not want his
+    def _setup_video():
+        "Ininitializes a new pygame screen using the framebuffer"
+        # Based on "Python GUI in Linux frame buffer"
+        # http://www.karoltomala.com/blog/?p=679
+        disp_no = os.getenv("DISPLAY")
+
+        # Check which frame buffer drivers are available
+        # Start with fbcon since directfb hangs with composite output
+        drivers = ['x11', 'fbcon', 'directfb', 'svgalib', 'Quartz']
+        found = False
+        for driver in drivers:
+            # Make sure that SDL_VIDEODRIVER is set
+            if not os.getenv('SDL_VIDEODRIVER'):
+                os.putenv('SDL_VIDEODRIVER', driver)
+            try:
+                pygame.display.init()
+            except pygame.error:
+                logger.error('Driver: {0} failed.'.format(driver))
+                continue
+            found = True
+            break
+
+        if not found:
+            logger.error('No suitable SDL video driver found to start the event subsystem, pygame joysticks may not work.')
+
     try:
         pygame.init()
+        _setup_video()
         joystick_count = pygame.joystick.get_count()
         joystick_names = []
         for i in range(0, joystick_count):
@@ -216,7 +246,7 @@ elif HAVE_PYGAME and USE_PYGAME:
             joystick_0_name = joystick_0.get_name()
 
     except pygame.error as e:
-        logger.error("PyGame error during joystick setup, {}".format(e))
+        logger.exception("PyGame error during joystick setup, {}".format(e))
 
 
     class InputController:
@@ -241,6 +271,13 @@ elif HAVE_PYGAME and USE_PYGAME:
 
         def _start(self):
             logger.info("Using Joystick : {}".format(self.joystick.get_name()))
+
+            # do a quick sanity test
+            try:
+                pygame.event.get()
+            except pygame.error as e:
+                logger.error("PyGame init error, joysticks will not be working, cause: {}".format(e))
+                self.keep_running = False
 
             while self.keep_running:
                 mainthread_dispatch(lambda: self._process_events(pygame.event.get()))

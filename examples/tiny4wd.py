@@ -1,5 +1,13 @@
+#!/usr/bin/python3
+
+# This sys.path change is just for demo purposes so we can run the example without having to install the library.
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.basename(__file__), "..")))
+
 from picraftzero.log import logger
 from picraftzero import Joystick, Wheelbase, steering_mixer, start
+
+
 
 # Joystick axis values are  (left/down)  -100 .. 100   (right/up)
 # Motors expect for right (id=1) and left(id=1):   (full speed backwards) -100  .. 100 (full speed forwards)

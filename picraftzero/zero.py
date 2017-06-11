@@ -376,7 +376,7 @@ from .config import get_config
 
 def start():
     config = get_config()
-    # TODO: perhaps be more explicit and not reley on this convention
+    # TODO: perhaps be more explicit and not rely on this convention
     if config['hmd']['camera_mono_url'].lower().startswith('ws'):
         cs = CameraServer()
         cs.start()

@@ -211,10 +211,7 @@
         switch (camera_mode) {
 
             case CameraDisplayMode.ONE_CAM_MONO:
-                var canvas = document.createElement("canvas");
-                camera_view.appendChild(canvas);
-                var client = new WebSocket(self._camera_mono_url);
-                self.player = new jsmpeg(client, {canvas: canvas});
+                 self.init_one_cam_single_ws();
                 break;
             case CameraDisplayMode.ONE_CAM_DUAL:
                 self.init_one_cam_dual_ws();
@@ -313,8 +310,11 @@
             right.style.left = self._cameraHorizontalOffsetRight + 'px';
 
         }
-
         var single = document.getElementById("singleImg");
+
+        if (null == single) {
+            single = document.getElementById("singleView"); // change to this generic name for all view to support WS and MJPEG
+        }
         if (single) {
             single.style.position = "absolute";
             single.style.height = window.innerHeight + 'px';
@@ -323,6 +323,7 @@
             single.style.left = x_pos + 'px';
 
         }
+
 
     }
 
@@ -407,9 +408,9 @@
             context_right = html_canvas_right.getContext('2d');
 
             window.addEventListener('resize', resize_canvas, false);
-            canvas_refresh_timer = window.setInterval(redraw, 10);
 
             resize_canvas();
+            canvas_refresh_timer = window.setInterval(redraw, 10);
             self.player = new jsmpeg(client, {canvas: html_canvas_left});
 
         }
@@ -424,23 +425,63 @@
             width = window.innerWidth/2;
             height = window.innerHeight;
 
-            html_canvas_left.style.top = 0;
-            html_canvas_left.style.left = 0;
+            var left_x_pos =   width/8;
+            var right_x_pos =  width + width/8;
+
+            html_canvas_left.style.position = "absolute";
+            html_canvas_left.style.top = 0  + "px";
+            html_canvas_left.style.left = left_x_pos  + "px";
             html_canvas_left.width = width;
             html_canvas_left.height = height;
             context_left.clearRect(0, 0, width, height);
 
-            html_canvas_right.style.top = 0;
-            html_canvas_right.style.left = width;
+            html_canvas_right.style.position = "absolute";
+            html_canvas_right.style.top = 0 + "px";
+            html_canvas_right.style.left = right_x_pos + "px";
             html_canvas_right.width = width;
             html_canvas_right.height = height;
             context_right.clearRect(0, 0, width, height);
-            redraw();
         }
 
     };
 
+    BubbleworksHMD.prototype.init_one_cam_single_ws = function () {
+        var self = this;
+        var camera_view = document.getElementById('camera_view');
+        var html_canvas_left = document.createElement("canvas");
+        var client = new WebSocket(self._camera_mono_url);
+        var context_left = 0;
 
+        var width = 1, height = 1;
+
+        initialize();
+
+        function initialize() {
+            camera_view.appendChild(html_canvas_left);
+            context_left = html_canvas_left.getContext('2d');
+
+            window.addEventListener('resize', resize_canvas, false);
+
+            resize_canvas();
+            self.player = new jsmpeg(client, {canvas: html_canvas_left});
+
+        }
+
+        function resize_canvas() {
+            console.log("resize_canvas: " + width + ", " + height);
+            width = window.innerWidth/2;
+            height = window.innerHeight;
+
+            html_canvas_left.style.position = "absolute";
+            html_canvas_left.style.top = 0  + "px";
+            html_canvas_left.style.left = Math.floor(width/2) + "px";
+            html_canvas_left.width = width ;
+            html_canvas_left.height = height;
+            context_left.clearRect(0, 0, width, height);
+
+        }
+
+    };
 
     // UI Utils
     BubbleworksHMD.prototype.toggle_button = function (id, state) {

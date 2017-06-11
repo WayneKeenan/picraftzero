@@ -1,10 +1,10 @@
-import logging
+#!/usr/bin/python3
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(filename)24s:%(lineno)3s - %(funcName)32s() ] - %(levelname)s - %(message)s')
+# This sys.path change is just for demo purposes so we can run the example without having to install the library.
+import os, sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.basename(__file__), "..")))
 
 from picraftzero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start, filter_messages, MessageReceiver, join_values
-
-
 
 # Find joysticks/thumbsticks for speed controll and pan/tilt control
 # First parameter is a logical id where 0 = right stick, 1 = left stick

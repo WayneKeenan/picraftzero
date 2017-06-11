@@ -23,6 +23,7 @@ The current installation process isn't too flexible at the moment, please follow
 Install software pre-requisites:
 ```
 sudo apt-get install -y libav-tools python3-picamera python3-ws4py
+sudo pip3 install evdev cap1xxx
 ```
 
 Download PiCraftZero from the Git repo:
@@ -40,8 +41,9 @@ Run example:
 
 ```bash
 cd picraftzero
-PYTHONPATH=. python3  examples/tiny4wd.py
+python3  examples/tiny4wd.py
 ```
+
 
 You will see some logging to the console.
 If you have a pimoroni Explorer pHAT attached you should see:
