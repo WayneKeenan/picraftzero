@@ -32,8 +32,8 @@ class PiconzeroMotor(MotorProvider):
             return
         self._last_speed = speed
         logger.info(msg)
-
-        speed = constrain(speed, -100, 100)
+        # TODO: scale -100..100 to -128..127
+        speed = constrain(speed, -128, 127)
         pz.setMotor(self.motor_id, speed)
 
 

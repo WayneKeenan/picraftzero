@@ -1,9 +1,4 @@
 
-import logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-from signal import pause
-
 
 from picraftzero import MessageReceiver, Wheelbase, PanTilt, Joystick, filter_messages, \
     steering_mixer, pantilt_converter, join_values, SourcePrinter, scaled_pair, custom_source_tool, start
@@ -365,7 +360,7 @@ local_joystick_wheelbase()
 
 
 # Slow things down for testing:
-wheelbase.source_delay = 1
+#wheelbase.source_delay = 1
 #pan_tilt.source_delay = 1
 printer.source_delay = 1
 printer2.source_delay = 1

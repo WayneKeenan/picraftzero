@@ -220,7 +220,7 @@ class Wheelbase(SourceMixin, CompositeDevice):
 
     @value.setter
     def value(self, value):
-        #print("Wheelbase.value={}".format(value))
+        logger.debug("Wheelbase.value={}".format(value))
         self.left_motor.value, self.right_motor.value = value
 
 
@@ -297,19 +297,12 @@ def filter_messages(values, type=None, id=None, dedupe=False):
 
 
 
-def steering_mixer(values, max_power=100):
+from .utils import differential_steering
+def steering_mixer(values, axis_max=100):
     it = iter(values)
     while True:
-        axis_pair = next(it)
-        (yaw, throttle) = axis_pair
-        # TODO: change it so that upstream (None, None) pairs are not passed along
-        yaw = float(yaw) if yaw else 0.0
-        throttle = float(throttle) if throttle else 0.0
-        left = throttle - yaw
-        right = throttle + yaw
-        scale = float(max_power) / max(1, abs(left), abs(right))
-        yield (int(left * scale), int(right * scale))
-
+        (yaw, throttle) = next(it)
+        yield differential_steering(throttle, yaw, axis_max)
 
 
 def scaled_pair(values, output_min, output_max, input_min=0, input_max=1):
@@ -376,7 +369,7 @@ from .config import get_config
 
 def start():
     config = get_config()
-    # TODO: perhaps be more explicit and not rely on this convention
+    # TODO: perhaps be more explicit and not rely on this convention of 'ws'
     if config['hmd']['camera_mono_url'].lower().startswith('ws'):
         cs = CameraServer()
         cs.start()

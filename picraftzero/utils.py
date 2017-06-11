@@ -145,7 +145,7 @@ def default_steering(inThrottle, inYaw):
 #                more of the joystick's range to pivot actions.
 #                Allowable range: (0..+127)
 
-def differential_steering(nJoyY, nJoyX):
+def differential_steering(nJoyY, nJoyX, axis_max=100.0):
     fPivYLimit = 32.0
 
     # TEMP VARIABLES
@@ -158,16 +158,16 @@ def differential_steering(nJoyY, nJoyX):
     # Calculate Drive Turn output due to Joystick X input
     if nJoyY >= 0:
         # Forward
-        nMotPremixL = 127.0 if nJoyX>=0 else 127.0 + nJoyX
-        nMotPremixR = 127.0 - nJoyX if nJoyX>=0 else 127.0
+        nMotPremixL = axis_max if nJoyX>=0 else axis_max + nJoyX
+        nMotPremixR = axis_max- nJoyX if nJoyX>=0 else axis_max
     else:
         # Reverse
-        nMotPremixL = 127.0 - nJoyX if nJoyX>=0 else 127.0
-        nMotPremixR = 127.0 if nJoyX>=0 else 127.0 + nJoyX
+        nMotPremixL = axis_max - nJoyX if nJoyX>=0 else axis_max
+        nMotPremixR = axis_max if nJoyX>=0 else axis_max + nJoyX
 
     # Scale Drive output due to Joystick Y input (throttle)
-    nMotPremixL = nMotPremixL * nJoyY/128.0;
-    nMotPremixR = nMotPremixR * nJoyY/128.0;
+    nMotPremixL = nMotPremixL * nJoyY/axis_max;
+    nMotPremixR = nMotPremixR * nJoyY/axis_max;
 
     # Now calculate pivot amount
     #  - Strength of pivot (nPivSpeed) based on Joystick X input
