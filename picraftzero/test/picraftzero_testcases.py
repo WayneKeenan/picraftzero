@@ -360,8 +360,8 @@ local_joystick_wheelbase()
 
 
 # Slow things down for testing:
-#wheelbase.source_delay = 1
-#pan_tilt.source_delay = 1
+wheelbase.source_delay = 1
+pan_tilt.source_delay = 1
 printer.source_delay = 1
 printer2.source_delay = 1
 

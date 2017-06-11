@@ -34,7 +34,7 @@ DEFAULT_CONFIG = {
     },
 
     'logging': {
-        'debug_enabled': True,
+        'debug_enabled': False,
     },
 
     'inputs': {
