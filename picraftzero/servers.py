@@ -143,29 +143,43 @@ class WebSocketServer:
 
 
 
+try:
+    from .thirdparty.pistreaming import server as pistreaming_server
+    have_pistreaming = True
 
-from .thirdparty.pistreaming import server as pistreaming_server
+except ImportError:
+    have_pistreaming = False
 
-class CameraServer:
 
+if have_pistreaming:
+    class CameraServer:
 
-    def __init__(self):
-        self.camera_thread = None
-        self.camera_server = None
+        def __init__(self):
+            self.camera_thread = None
+            self.camera_server = None
 
-    def _start(self):
-        try:
-            logger.info("Starting CameraServer server")
-            pistreaming_server.main()
-        except Exception as e:
-            logger.exception(e)
+        def _start(self):
+            try:
+                logger.info("Starting PiStreaming CameraServer server")
+                pistreaming_server.main()
+            except Exception as e:
+                logger.exception(e)
 
-    def stop(self):
-        logger.info("Stopping Camera server")
-        #if self.camera_server:
-            #self.camera_server.shutdown()
+        def stop(self):
+            logger.info("Stopping Camera server")
+            #if self.camera_server:
+                #self.camera_server.shutdown()
 
-    def start(self):
-        self.camera_thread = threading.Thread(target=self._start, name = 'CameraServer')
-        self.camera_thread.daemon = False # allow clean shutdown
-        self.camera_thread.start()
+        def start(self):
+            self.camera_thread = threading.Thread(target=self._start, name = 'CameraServer')
+            self.camera_thread.daemon = False # allow clean shutdown
+            self.camera_thread.start()
+
+else:
+    class CameraServer:
+
+        def start(self):
+            logger.info("Using mock CameraServer server")
+
+        def stop(self):
+            pass
