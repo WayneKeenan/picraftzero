@@ -186,7 +186,7 @@ HAVE_SMBUS=False
 try:
     import smbus
     HAVE_SMBUS = True
-except ModuleNotFoundError:
+except ImportError:
     logger.warning("smbus library not found, maybe not installed? maybe running on Mac/Windows?")
 
 
