@@ -2,7 +2,7 @@ language: python
 python:
   - "3.4"
 script:
-  - python test/runtests.py
+  - python -m unittest discover -s test
 before_script:
   - export PYTHONPATH=$PYTHONPATH:$(pwd)
 
