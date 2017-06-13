@@ -93,7 +93,7 @@ class DefaultWebSocketHandler(WebSocket):
             DefaultWebSocketHandler.callee.on_websocket_message(obj)
 
         except Exception as e:
-            logging.exception("Error in handleMessage")
+            logger.exception("Error in handleMessage")
 
     @staticmethod
     def send_all_clients_message(message):
@@ -111,6 +111,7 @@ class WebSocketServer:
         self.ws = None
         self.ws_class = ws_class
         self.ws_class.callee = callee
+        self._keep_running = True
 
     def _start(self):
         try:
@@ -118,18 +119,19 @@ class WebSocketServer:
             self.ws = SimpleWebSocketServer('', self.ws_port, self.ws_class)
             try:
                 self.ws.serveforever()
-                # eat errors as the server doesnt shutdown cleanly
-                # erro would be: (file descriptor cannot be a negative integer (-1))
-                # TODO: python2 still throws an exception on shutdown
-            except ValueError:
-                pass
-        except Exception as e:
-            logger.exception(e)
+            except Exception:
+                logger.exception("Failed to close WebSocket")
+
+        except Exception:
+            logger.exception("Failed to create WebSocket")
 
     def stop(self):
         logger.info("Stopping WebSocket server")
-        if self.ws:
-            self.ws.close()
+        try:
+            self.ws.stop()
+        except:
+            logger.exception("Failed to st WebSocket")
+
 
     def start(self):
         self.ws_thread = threading.Thread(target=self._start, name = 'WebSocketServer')

@@ -224,18 +224,29 @@ def wait_blocking():
     callback()
 
 
+
+_keep_running = True
+
 def wait_nonblocking():
-    while True:
+    global _keep_running
+    while _keep_running:
         try:
             callback = callback_queue.get(False) #doesn't block
         except queue.Empty:
             break
         callback()
 
-def main_loop():
-    while True:
-        wait_blocking()
 
+def main_loop():
+    global _keep_running
+    while _keep_running:
+        wait_blocking()
+    logger.info("left main loop")
+
+
+def exit_main():
+    global _keep_running
+    _keep_running = False
 
 if __name__ == '__main__':
     import doctest

@@ -13,7 +13,7 @@ def find_devices_and_import():
     global setup_complete, _motor_provider_class, _servo_provider_class
     if setup_complete:
         return
-    devices = i2c_scan()
+    devices = i2c_scan()            # TODO: add config option to specify i2c bus
     logger.info("i2c devices detected: {}".format(devices))
 
     PICONZERO_I2C_DEVICE_ID = 0x22

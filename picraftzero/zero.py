@@ -17,7 +17,7 @@ from gpiozero.devices import Device, CompositeDevice
 
 
 from .servers import HTTPServer, WebSocketServer as WSS
-from .utils import arduino_map, main_loop
+from .utils import arduino_map, main_loop, exit_main
 from .inputs.joystick import InputController
 from .providers import get_motor_provider, get_servo_provider
 
@@ -100,7 +100,9 @@ class MessageReceiver(SharedMixin, Device):
         """
         return self._read()
 
-
+    def stop(self):
+        self._http_server.stop()
+        self._ws_server.stop()
 
 
 
@@ -122,6 +124,10 @@ class Joystick(Device, SourceMixin):
         else:
             self._x_axis_name, self._y_axis_name = ('rx', 'ry')
 
+    def close(self):
+        super(Joystick, self).close()
+        self.messages.stop()
+
     def message_recv(self, message):
         if message["type"] == "JOYSTICK" and message["id"] == self.joystick_id:
             self._value = tuple(message['data'])
@@ -140,8 +146,6 @@ class Joystick(Device, SourceMixin):
     @value.setter
     def value(self, value):
         self._value = value
-
-
 
 
 # ----------------------
@@ -375,3 +379,7 @@ def start():
         cs.start()
     main_loop()
 
+
+def stop():
+    logger.info("Stopping")
+    exit_main()

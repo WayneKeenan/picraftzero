@@ -11,7 +11,6 @@
         self._debug =  opts.debug|| false;
         self._reconnect_interval = opts.reconnectInterval || 3000;
         self._url = opts.ws_url ||  opts.ws_protocol +  window.location.hostname + ":" + opts.ws_port;
-;
         self._websocket = null;
         self._debug = opts.debug_ || null;
 

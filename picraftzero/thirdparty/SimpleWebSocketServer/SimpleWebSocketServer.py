@@ -582,6 +582,7 @@ class SimpleWebSocketServer(object):
       self.selectInterval = selectInterval
       self.connections = {}
       self.listeners = [self.serversocket]
+      self.keep_running = True
 
    def _decorateSocket(self, sock):
       return sock
@@ -596,9 +597,11 @@ class SimpleWebSocketServer(object):
          conn.close()
          conn.handleClose()
 
+   def stop(self):
+       self.keep_running=False
 
    def serveforever(self):
-      while True:
+      while self.keep_running:
          writers = []
          for fileno in self.listeners:
             if fileno == self.serversocket:
