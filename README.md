@@ -7,17 +7,17 @@
 PiCraftZero is:
 
  + a universal remote control using virtual (web) and physical (handheld) controllers, and 
- + a collection of building blocks for creating robots that respond to the controller inputs
+ + a collection of building blocks for creating robots that respond to the controller inputs, based on gpiozero
 
   
 # Status
 
-This is a prototype and all feedback is welcomed, please raise a [GitHub issue](issues) for feature requests, questions and bug reports.
+This is a prototype and all feedback is welcomed, please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) for feature requests, questions and bug reports.
 
 
 # Quick Start - Installing on a Pi
 
-This quick start kicks the tyres to check that basic things are ok, *please* refer to the notes section, as this is more fun with the Pi Camera and i2c enabled.
+This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun on a Pi with the Pi Camera and i2c enabled.
 
 Type in:
 
@@ -84,7 +84,7 @@ There are more in the [examples](examples) folder.
 There are a few changes that can be made such as running as a service and using an alternative camera streaming service that has low latency/high framerates.
 
 
-### Install UV4L Camera Service 
+## Install UV4L Camera Service 
 
 To use a camera streaming service which has low latency you need to:
 
@@ -94,7 +94,7 @@ To use a camera streaming service which has low latency you need to:
 
 You will need to exit and re-run any running PiCraftZero python script.
 
-
+Install UV4L:
 
 ```bash
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
@@ -104,8 +104,14 @@ sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
 ```
 
 
+Backup the UV4L default config file:
+
 ```bash
 sudo mv /etc/uv4l/uv4l-raspicam.conf /etc/uv4l/uv4l-raspicam.conf.original 
+```
+
+This block below is a single script action and should be executed as one single copy and paste: 
+```bash
 cat << 'EOF' | sudo tee /etc/uv4l/uv4l-raspicam.conf > /dev/null
 driver = raspicam
 auto-video_nr = yes
@@ -123,7 +129,6 @@ preview = 240
 preview = 320
 preview = 240
 EOF
-
 ```
 
 Then run:
@@ -146,7 +151,10 @@ If you want to stop the camera service type:
 ### Configure PiCraftZero
 
 
-Overriding the default config to use the UV4L server:
+Overriding the default config to use the UV4L server,
+
+This block below is a single script action and should be executed as one single copy and paste: 
+
 ```bash
 cat << 'EOF' | sudo tee /etc/picraftzero.cfg > /dev/null
 [hmd]
@@ -155,9 +163,14 @@ EOF
 ```
 
 
-Now re-run:
+Now re-run the default script:
 ```bash
 python3 -m picraftzero
 ```
 
-And press relaod in your web browser.
+And press reload in your web browser.
+
+
+
+##
+
