@@ -7,7 +7,7 @@
 PiCraftZero is:
 
  + a universal remote control using virtual (web) and physical (handheld) controllers, and 
- + a collection of building blocks for creating robots that respond to the controller inputs, based on gpiozero
+ + a Python library for receiving controller inputs, based on gpiozero's flow programming model (source/values)
 
   
 # Status
@@ -22,7 +22,7 @@ This quick start kicks the tyres to check that basic things are ok, this will ru
 To install type in:
 
 ```bash
-sudo apt-get update && sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev
+sudo apt-get update && sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev python3-pip
 sudo pip3 install evdev cap1xxx picraftzero
 ```
 
@@ -34,10 +34,17 @@ python3 -m picraftzero
 
 Open a web browser, on *almost any* device, to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
 
+The browser shuld be in landscape mode (or ona  desktop the windows should be wider than taller)
+
+Click on the 'Single Camera' icon in the center of the toolbar.
+
 The right hand side of the screen is virtual joystick used for motor control by default.
 The left hand side of the screen is virtual joystick ised for pan/tilt control by default, if available.
 
 If you move the joysticks around then you should see logging info on screen and if motors and servos connected they should move.
+
+
+
 
 # Notes
 
@@ -49,19 +56,21 @@ Use `raspi-config` to:
 - Enable i2c
 - Set GPU memory to at least 128Mb
 
-### Hardware pre-requesites
+### Hardware prerequisites
 
 PiCraft zero has been written to work on many popular platforms with or without the physical robot hardware. 
 
-It uses auto-detection of common motor and servo controllers and will resort to using 'dummy, just log a message' fallbacks if no hardware is detected.
+It uses auto-detection of common motor and servo controllers and will resort to using a 'just log a message' fallback if no actual hardware is detected.
 
 A list of the hardware that can be used:
 
-- A Motor Controller  (optional)
-- A Servo Controller  (optional)
+- A Motor Controller  (optional) e.g. Pimoroni Explorer pHAT or 4tronix Piconzero
+- A Servo Controller  (optional) e.g. Pimoroni PanTilt HAT or 4tronix Piconzero
 - Camera (optional)
-- Joypad (optional)
-- Desktop, laptop, smartphone or tablet with a browser
+- Joypad (optional) e.g. RockCandy
+- Desktop, laptop, smartphone or tablet with a webbrowser
+
+If your using a Piconzero pHAT then attach the pan servo to servo 0 and the tilt servo to servo 1.
 
 
 # Example
