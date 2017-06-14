@@ -1,9 +1,16 @@
 language: python
 python:
-  - "3.4"
+- '3.4'
 script:
-  - python -m unittest discover -s test
+- python -m unittest discover -s test
 before_script:
-  - export PYTHONPATH=$PYTHONPATH:$(pwd)
-
+- export PYTHONPATH=$PYTHONPATH:$(pwd)
 sudo: false
+deploy:
+  provider: pypi
+  user: waynek
+  password:
+    secure: YwJFPUt9lop1SYMaPu0ZQIX+4REqcv3gnopgqOvqUKe6HVUticg6OW4hmH0sYfVVJEwT71jkv+HWkQAOPeN7PTjB7ErhG/wcdYzfyw3il3+96usO1Yfb/huZPed/NQ87t8TMe1FpeS4e5TZISAcwEeVP34lX2y//FSD+zVDYu9EOWhTmOKy1qrjJaWGBsUG3et3zkgwKKI9uIbp7uekQxlU/5AXMqwFCf7uto3t9odYB3CCC1oQD4X0fEAIWYJEAbwq4XRijvkmciu58JNkDCLF58nHwXtgKyu0dAVrZbF5x+9mBdZ861gxVWX7d1PlvXK/NIcFMntnOgKAM9FKNZXQkFl/85lbeHrL8D+OrXwqKMUKG8aN3FZ2WsvQ9bDm8XTQ9feIw5zrUpdoqBgZQlgBFSNTajR7Vg4t8X/FIBphQOTRfbMa4z9KitSdS6cIfDjmaatQ6iyqO+GEtAg3BqrXZfcROccbjpEcYaZIqzIe43Xs2x/UWDbVZmcEqmi9P2lVqe4B7h2NF/gVHRiVXAA1azERIbXlo9dFwT3XnaRVVPvaPQYyfG48oYOcNvfAQ0Vn0bBkAFaNp7Ukji8U5UXV6lKbkOU/hQWJtqzAdvYt95QW/pkYxQELp9yJtIaxxLc3XfTzeQe5PJjGIkij74oeUdZBEkZFEUKegnmdKpT4=
+  on:
+      tags: true
+

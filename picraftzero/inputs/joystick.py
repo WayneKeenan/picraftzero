@@ -114,7 +114,9 @@ elif HAVE_EVENT and USE_EVENT:
             self.thread.start()
 
             vpid = "{}:{}".format(self.input_device.info.vendor, self.input_device.info.product)
-            self.mapping = VENDOR_PRODUCT_MAPPINGS[vpid]
+
+            if vpid in VENDOR_PRODUCT_MAPPINGS:
+                self.mapping = VENDOR_PRODUCT_MAPPINGS[vpid]
 
         def _start(self):
             for event in self.input_device.read_loop():
@@ -199,8 +201,8 @@ elif HAVE_PYGAME and USE_PYGAME:
         "Nimbus": NIMBUS_MAPPING,
         "PLAYSTATION(R)3 Controller": PS3_MAPPING,
         "Wireless 360 Controller": XB360_MAPPING,
-        "Xbox 360 Wired Controller": XB360_MAPPING,         # Mac
-        "Microsoft X-Box 360 pad": XB360_MAPPING,           # Pi
+        "Xbox 360 Wired Controller": XB360_MAPPING,         # Mac *1
+        "Microsoft X-Box 360 pad": XB360_MAPPING,           # Pi  *1     *1 = same actual controller
     }
 
 
