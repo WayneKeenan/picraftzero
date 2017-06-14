@@ -1,96 +1,72 @@
-PiCraftZero
-===========
-
-A simple Python interface for controlling robots using multiple types of physical and virtual controllers. 
-Optionally supports camera video streaming for mono and stereo vision. Stereo viewer supports using a Google cardboard viewer and can use the phone's orientation to control a pan & tilt camera mount..
+[![Build Status](https://travis-ci.org/WayneKeenan/picraftzero.svg?branch=master)](https://travis-ci.org/WayneKeenan/picraftzero)
 
 
-Status
-======
-
-This is a prototype and all feedback is welcomed, please raise a [GitHub issue]() for requests and bug reports.
+# PiCraftZero
 
 
+PiCraftZero is:
 
-Quick Start
-===========
+ + a universal remote control using virtual (web) and physical (handheld) controllers, and 
+ + a collection of building blocks for creating robots that respond to the controller inputs
 
-This quick start is for the impatient to kick the tyres ASAP and check that things are ok, but, *please* read the notes section below too.
+  
+# Status
 
-The current installation process isn't too flexible at the moment, please follow the instructions very closely.
-
-
-Install software pre-requisites:
-```
-sudo apt-get install -y libav-tools python3-picamera python3-ws4py
-sudo pip3 install evdev cap1xxx
-```
-
-Download PiCraftZero from the Git repo:
- 
-```bash
-cd /home/pi
-mkdir bubbleworks
-cd bubbleworks
-git clone https://github.com/WayneKeenan/picraftzero
-```
+This is a prototype and all feedback is welcomed, please raise a [GitHub issue](issues) for feature requests, questions and bug reports.
 
 
-Run example:
+# Quick Start - Installing on a Pi
 
+This quick start kicks the tyres to check that basic things are ok, *please* refer to the notes section, as this is more fun with the Pi Camera and i2c enabled.
+
+Type in:
 
 ```bash
-cd picraftzero
-python3  examples/tiny4wd.py
+sudo apt-get update && sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev
+sudo pip3 install evdev cap1xxx picraftzero
+python3 -m picraftzero
 ```
 
+Open a web browser, on *almost any* device, to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
 
-You will see some logging to the console.
-If you have a pimoroni Explorer pHAT attached you should see:
+The right hand side of the screen is virtual joystick used for motor control by default.
+The left hand side of the screen is virtual joystick ised for pan/tilt control by default, if available.
 
-```Explorer pHAT detected...```
+If you move the joysticks around then you should see logging info on screen and if motors and servos connected they should move.
 
+# Notes
 
-If you have a Piconzero attached you should see:
+### Raspbian prerequisites:
 
-```i2c devices detected: [34]```  (nice eh!)
+Use `raspi-config` to:
 
+- Enable Camera, 
+- Enable i2c
+- Set GPU memory to at least 128Mb
 
+### Hardware pre-requesites
 
-Open a web browser to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
+PiCraft zero has been written to work on many popular platforms with or without the physical robot hardware. 
 
-The right hand side of the screen is virtual joystick 0 (usually used for motor control)
-The left hand side of the screen is virtual joystick 1 (usually used for pan/tilt control)
+It uses auto-detection of common motor and servo controllers and will resort to using 'dummy, just log a message' fallbacks if no hardware is detected.
 
-If you move the joysticks around then things should happen...
+A list of the hardware that can be used:
 
-Notes
-=====
-
-After the quickstart runs ok then there improvements that can be made for better video streaming (using uv4l) and to run PicraftZero as a systemd service that automatically starts on boot. Docmeten her [TBD, add readthedocs url]
-
-
-Installation hardware pre-requisites:
-
-To control motors and servos the Pi should have a Pimoroni Explorer pHAT or 4Tronix Piconzer attached to the Pi, although this is not mandatory for PiCraftZero to operate. (At the time of writing the Explorer pHAT is the more tested PiCraftZero code path)
-
-If you have a camera, you should have attached it before starting the Pi, this is optional.
-
-If you have a RockCandy controller connect it before running the code, not mandatory as there are WebBrowser based virtual joysticks.
+- A Motor Controller  (optional)
+- A Servo Controller  (optional)
+- Camera (optional)
+- Joypad (optional)
+- Desktop, laptop, smartphone or tablet with a browser
 
 
-Examples
-========
+# Example
 
-
-simple.py
-*********
-
-A basic robot that has 2 motors.
-This example can be found [here](examples/tiny4wd.py).
+A basic robot that has 2 motors, the example below can be found [here](examples/tiny4wd.py) with more comments.
 
 
 ```python
+#!/usr/bin/python3
+
 from picraftzero import Joystick, Wheelbase, steering_mixer, start
 
 joystick= Joystick()                         
@@ -101,58 +77,58 @@ motors.source = steering_mixer(joystick.values)
 start()
 ```
 
-pantilt.py
-**********
-
-
-A basic robot that has 2 motors and a pan & tilt camera fitted.
-The right hand side joystick on the physical or virtual (web page) joystick cotnrols the motors.
-The left hand side joystick on the physical or virtual (web page) joystick cotnrols the pan/tilt.
-
-If a camera, or 2, is attached then there can be streaming video available.
-If the browser is on a phone then the gyro readings from it can be sent to the Pi to control the pan/tilt servos.  This is useful when the phone is put into a Google Cardboard viewer, the pan/tilt servo will track your head movements.
+There are more in the [examples](examples) folder.
  
- 
-This example can be found [here](examples/pantilt.py)
+# Enhancements
+
+There are a few changes that can be made such as running as a service and using an alternative camera streaming service that has low latency/high framerates.
 
 
-```python
+### Install UV4L Camera Service 
 
-from picraftzero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start, filter_messages, MessageReceiver, join_values
+To use a camera streaming service which has low latency you need to:
 
-joystick_right= Joystick(0)
-joystick_left = Joystick(1)
-
-messages = MessageReceiver(port=8001)
-
-wheelbase = Wheelbase(left=0, right=1) 
-pan_tilt = PanTilt(pan=0, tilt=1)      
-
-wheelbase.source = steering_mixer(joystick_right.values)
-pan_tilt.source =  join_values(
-    filter_messages(messages.values, type='PANTILT', id=0),
-    scaled_pair(joystick_left.values, 180, 0, -100, 100)
-)
++ Install and run Uv4L RaspiCam service
++ Update PiCraftZero config
 
 
-start()
-```
+You will need to exit and re-run any running PiCraftZero python script.
 
 
-Enhancements
-============
-
-Camera Streaming
-================
-
-This replace the default camera streaming with a much lower latency version:
 
 ```bash
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
 echo 'deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ jessie main' | sudo tee --append /etc/apt/sources.list > /dev/null
 sudo apt-get update
 sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
-sudo cp scripts/uv4l-raspicam.conf /etc/uv4l/
+```
+
+
+```bash
+sudo mv /etc/uv4l/uv4l-raspicam.conf /etc/uv4l/uv4l-raspicam.conf.original 
+cat << 'EOF' | sudo tee /etc/uv4l/uv4l-raspicam.conf > /dev/null
+driver = raspicam
+auto-video_nr = yes
+frame-buffers = 4
+encoding = mjpeg
+width = 640
+height = 480
+framerate = 24
+quality = 7 
+video-denoise = no
+nopreview = no
+fullscreen = no
+preview = 480
+preview = 240
+preview = 320
+preview = 240
+EOF
+
+```
+
+Then run:
+
+```bash
 sudo service uv4l_raspicam restart
 sudo service uv4l_raspicam status
 ```
@@ -160,52 +136,31 @@ sudo service uv4l_raspicam status
 Check the output and look for: 
 ```   Active: active (running)```
 
-You can test it's running by going to [http://raspberrypi.local:8080/stream](http://raspberrypi.local:8080/stream)
-
-
-
-```bash
-cd ~/bubbleworks/picraftzero/
-nano picraftzero/config.py
-```
-
-Set the `USE_UV4L` to `True`
-
-You will need to re-run the example python script.
+You can verify it's working by going to [http://raspberrypi.local:8080/stream](http://raspberrypi.local:8080/stream)
 
 If you want to stop the camera service type:
 
 ```sudo systemctl stop uv4l_raspicam```
 
-Running as a service
-====================
 
-This will run the `pantilt.py` example every boot.
+### Configure PiCraftZero
 
+
+Overriding the default config to use the UV4L server:
 ```bash
-cd  ~/bubbleworks/picraftzero/
-sudo sh ./scripts/install_service.sh  scripts/services/picraftzero_www.service
-```
+sudo nano 
+cat << 'EOF' | sudo tee /etc/picraftzero.cfg > /dev/null
+[hmd]
+camera_mono_url=http://${WINDOW_LOCATION_HOSTNAME}:8080/stream/video.mjpeg
 
-To follow the logs type:
+EOF
 
-```bash
-sudo journalctl -f -u picraftzero_www.service
-```
-
-
-
-To stop, start or restart the service:
-
-```bash
-sudo systemctl stop picraftzero_www
-sudo systemctl start picraftzero_www
-sudo systemctl restart picraftzero_www
 ```
 
 
+Now re-run:
+```bash
+python3 -m picraftzero
+```
 
-Bonjour/Zeroconf
-================
-
-Adding [Apples Bonjour Print services](https://support.apple.com/kb/dl999?locale=en_GB) is optional but makes connecting to Pi's so much easier on Windows, it lets you use names line 'raspberypi.local'.  (The Pi has Bonjour installed by default these days)
+And press relaod in your web browser.

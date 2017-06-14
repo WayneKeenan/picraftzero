@@ -1,108 +1,43 @@
 import logging
-import os.path
 import json
-import ast
-from pprint import pformat
-
-logger = logging.getLogger(__name__)
-
-USE_UV4L = False
+from configparser import ConfigParser
+from os.path import expanduser, join, split
+from .log import logger
 
 
-if USE_UV4L:
-    DEFAULT_MONO_URL="http://${WINDOW_LOCATION_HOSTNAME}:8080/stream/video.mjpeg"
-else:
-    DEFAULT_MONO_URL = "ws://${WINDOW_LOCATION_HOSTNAME}:8084/"
+CONFIG_FILE="picraftzero.cfg"
 
-
-
-CONFIG_FILES = [
-                "./picraft.cfg",
-                "../picraft.cfg",
-                "~/.bubbleworks/picraft/conf/picraft.cfg",
-                "/home/pi/.bubbleworks/picraft/conf/picraft.cfg",
-                "/opt/bubbleworks/picraft/conf/picraft.cfg",
-                os.path.join(os.path.split(__file__)[0], "picraft.cfg"),
+# order of precedence is low to high:
+CONFIG_CANDIDATES = [
+                join(join(split(__file__)[0],'resources/config', CONFIG_FILE)),      # built-in defaults in package folder
+                join("/etc", CONFIG_FILE),
+                join(expanduser("~"), "." + CONFIG_FILE),
                 ]
 
-config_file = CONFIG_FILES[-1]
+def parse_config():
+    logger.info("Config file search locations: {}".format(CONFIG_CANDIDATES))
+    config = ConfigParser()
+    found = config.read(CONFIG_CANDIDATES)
+    if config.getboolean('logging', 'debug_enabled', fallback=False):
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
 
+    logger.info('Found config files: {}'.format(sorted(found)))
+    return config
 
-DEFAULT_CONFIG = {
-    'services_topology': {
+def get_config():
+    config = parse_config()
+    return config
 
-        'services': {
-            'www':['picraft_www'],
-            # 'camera':['uv4l_raspicam'],
-        },
-
-        'hosts_services_mapping':{
-            #'cam0.local': ['uv4l_raspicam'],
-            #'cam1.local': ['uv4l_raspicam'],
-            'tiny4wd.local': ['picraft_www'],
-        },
-    },
-
-    'logging': {
-        'debug_enabled': False,
-    },
-
-    'inputs': {
-        'keyboard_mapping':"8BitDoZero",
-
-    },
-
-    'www': {
-        'http_port':8000,
-        'ws_port': 8001,
-        'ws_protocol': "ws://",
-    },
-
-    'hmd': {
-        'iconbar_element': 'icon-bar',  # TODO: move to web layer
-        #'camera_left_url':  "http://cam0.local:8080/stream/video.mjpeg",
-        #'camera_right_url': "http://cam1.local:8080/stream/video.mjpeg",
-        #'camera_mono_url':  "http://tiny4wd.local:8080/stream/video.mjpeg",
-        #'camera_mono_url':  "ws://${WINDOW_LOCATION_HOSTNAME}:8084/",  # default to the PiStreaming server
-        'camera_mono_url': DEFAULT_MONO_URL,
-        'camera_view_lx': 13,
-        'camera_view_ly': 40,
-        'camera_view_rx': 20,
-        'camera_view_ry': 60,
-    },
-
-    'pantilt': {
-        'pan_angle_offset': 0,
-        'tilt_angle_offset': 0,
-    }
-}
-
-
-
-
-def read_config():
-    logger.debug("Config file: {}".format(config_file))
-    with open(config_file, 'r') as the_file:
-        config= ast.literal_eval(the_file.read())
-        logger.debug("Read config: {}".format(pformat(config)))
-        return config
-
-
-
-def write_config(config_dict):
-    with open(config_file, 'w') as the_file:
-        return the_file.write(pformat(config_dict))
-
+def get_config_dict():
+    config = get_config()
+    config_dict = {s: dict(config.items(s)) for s in config.sections()}
+    logging.info("Config Dict = {}".format(config_dict))
+    return config_dict
 
 
 def get_json_config():
-    return json.dumps(read_config(), indent=4, sort_keys=True)
+    return json.dumps(get_config_dict(), indent=4, sort_keys=True)
 
 
-
-def get_config():
-    return read_config()
-
-
-#TODO: disable this after dev
-write_config(DEFAULT_CONFIG)

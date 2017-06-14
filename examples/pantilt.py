@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-# This sys.path change is just for demo purposes so we can run the example without having to install the library.
-import os, sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.basename(__file__), "..")))
-
 from picraftzero import Wheelbase, PanTilt, Joystick, steering_mixer, scaled_pair, start, filter_messages, MessageReceiver, join_values
 
 # Find joysticks/thumbsticks for speed controll and pan/tilt control

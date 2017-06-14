@@ -7,7 +7,7 @@ This project would not have been possible without building on the work of :
 
 + GPIOZero - [Ben Nuttal, Dave Jones, Andrew Scheller and co.](https://gpiozero.readthedocs.io/en/stable/#contributors)
 + Pimoroni Explorer pHAT - [Phil Howard at Pimoroni](https://github.com/pimoroni/explorer-hat)
-+ PiConZero Python Library - [4Tronix](https://github.com/4tronix/PiconZero)
++ PiConZero Python Library - [4Tronix](https://4tronix.co.uk/blog/?p=1224)
 + PyGame - [PyGame](http://www.pygame.org/download.shtml)
 + RaspberryPi Mocks - [Trevor Allen](https://github.com/TCAllen07/raspi-device-mocks)
 

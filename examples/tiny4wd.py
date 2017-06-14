@@ -1,9 +1,5 @@
 #!/usr/bin/python3
 
-# This sys.path change is just for demo purposes so we can run the example without having to install the library.
-import os, sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.basename(__file__), "..")))
-
 from picraftzero.log import logger
 from picraftzero import Joystick, Wheelbase, steering_mixer, start
 

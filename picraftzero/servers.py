@@ -41,7 +41,7 @@ class HTTPServer:
 
     def __init__(self, http_port = None):
         self.http_thread = None
-        self.http_port = http_port if http_port else config['www']['http_port']
+        self.http_port = http_port if http_port else int(config['www']['http_port'])
         TCPServer.allow_reuse_address = True
         self.httpd = None
 
@@ -107,7 +107,7 @@ class WebSocketServer:
 
     def __init__(self, callee, ws_port = None, ws_class=DefaultWebSocketHandler, ):
         self.ws_thread = None
-        self.ws_port = ws_port if ws_port else config['www']['ws_port']
+        self.ws_port = ws_port if ws_port else int(config['www']['ws_port'])
         self.ws = None
         self.ws_class = ws_class
         self.ws_class.callee = callee

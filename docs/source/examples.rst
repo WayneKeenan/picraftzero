@@ -43,5 +43,4 @@ If the browser is on a phone then the gyro readings from it can be sent to the P
 # Other examples
 
 
-You can find more of the flow based examples [here](test/picraftzero_testcases.py)
-
+and you can find more of the PiCarftZero 'gpiozero flow programming' (source/values) examples [here](test/picraftzero_testcases.py)
