@@ -19,11 +19,16 @@ This is a prototype and all feedback is welcomed, please raise a [GitHub issue](
 
 This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun on a Pi with the Pi Camera and i2c enabled.
 
-Type in:
+To install type in:
 
 ```bash
 sudo apt-get update && sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev
 sudo pip3 install evdev cap1xxx picraftzero
+```
+
+To run the default PiCraftZero behaviour which supports controlling 2 motors and 2 servos, if available, run:
+ 
+```bash
 python3 -m picraftzero
 ```
 
