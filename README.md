@@ -148,13 +148,10 @@ If you want to stop the camera service type:
 
 Overriding the default config to use the UV4L server:
 ```bash
-sudo nano 
 cat << 'EOF' | sudo tee /etc/picraftzero.cfg > /dev/null
 [hmd]
 camera_mono_url=http://${WINDOW_LOCATION_HOSTNAME}:8080/stream/video.mjpeg
-
 EOF
-
 ```
 
 
