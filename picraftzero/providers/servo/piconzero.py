@@ -10,7 +10,7 @@ from picraftzero.thirdparty import piconzero as pz
 class PiconzeroServo(ServoProvider):
 
     def __init__(self, servo_id):
-        if servo_id not in [0,5]:
+        if servo_id not in range(0,6):
             raise ValueError("Servo id must be between 0 and 5")
 
         self.last_angle = None
