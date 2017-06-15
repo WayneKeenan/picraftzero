@@ -80,6 +80,7 @@ elif HAVE_EVENT and USE_EVENT:
         'ry': {'event_name': 'ABS_RZ','mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
     }
 
+
     XB360_AXIS_DEADZONE = 500
     XB360_MAPPING = {
         'lx': {'event_name': 'ABS_X', 'mapfunc': lambda x: arduino_map(x, -32768, 32767, -100,  100) if abs(x) > XB360_AXIS_DEADZONE else 0},
@@ -92,6 +93,7 @@ elif HAVE_EVENT and USE_EVENT:
         "3695:296": ROCKCANDY_MAPPING,
         "1118:654": XB360_MAPPING,          # Wired XBox360
         "1118:673": XB360_MAPPING,          # Wireless XBox360
+        "3695:532": AFTERGLOW_MAPPING
     }
 
     class InputController:
@@ -104,16 +106,19 @@ elif HAVE_EVENT and USE_EVENT:
 
             devices = list_devices()
             if not len(devices) > 0:
+                logger.info("No input devices found")
                 return
-            device_path = devices[0]    # Just joysticks on the first controller, for now
+            logger.info("Found input devices: {}".format(devices))
 
+            device_path = devices[0]    # Just joysticks on the first controller, for now
+            logger.info("Using device: {}".format(device_path))
             self.input_device = InputDevice(device_path)
             self.thread = threading.Thread(target=self._start, name="InputController"+str(joystick_id))
             self.thread.daemon = True
             self.thread.start()
 
             vpid = "{}:{}".format(self.input_device.info.vendor, self.input_device.info.product)
-
+            logger.info("Device USB VPID: {}".format(vpid))
             if vpid in VENDOR_PRODUCT_MAPPINGS:
                 self.mapping = VENDOR_PRODUCT_MAPPINGS[vpid]
 
