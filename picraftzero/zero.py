@@ -16,7 +16,7 @@ try:
     pi_info = gpiozero.pins.data.pi_info()
     logger.debug("Pi info is {}".format(pi_info))
     RUNNING_ON_PI = True
-except FileNotFoundError:
+except (FileNotFoundError, gpiozero.exc.PinUnknownPi):
     RUNNING_ON_PI = False
 
 if not RUNNING_ON_PI:
