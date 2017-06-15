@@ -103,6 +103,5 @@ https://codeclimate.com/github/WayneKeenan/picraftzero
 
 https://pypi.python.org/pypi?%3Aaction=pkg_edit&name=picraftzero
 
-
-
+https://codecov.io/gh/WayneKeenan/picraftzero/
 

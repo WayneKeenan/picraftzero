@@ -80,6 +80,7 @@ elif HAVE_EVENT and USE_EVENT:
         'ry': {'event_name': 'ABS_RZ','mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
     }
 
+    AFTERGLOW_MAPPING = ROCKCANDY_MAPPING
 
     XB360_AXIS_DEADZONE = 500
     XB360_MAPPING = {
@@ -93,7 +94,7 @@ elif HAVE_EVENT and USE_EVENT:
         "3695:296": ROCKCANDY_MAPPING,
         "1118:654": XB360_MAPPING,          # Wired XBox360
         "1118:673": XB360_MAPPING,          # Wireless XBox360
-        "3695:532": AFTERGLOW_MAPPING
+        "3695:532": AFTERGLOW_MAPPING,
     }
 
     class InputController:
@@ -121,14 +122,19 @@ elif HAVE_EVENT and USE_EVENT:
             logger.info("Device USB VPID: {}".format(vpid))
             if vpid in VENDOR_PRODUCT_MAPPINGS:
                 self.mapping = VENDOR_PRODUCT_MAPPINGS[vpid]
+            else:
+                logger.warning("Input device USB VPID not found for '{}'".format(vpid))
 
         def _start(self):
             for event in self.input_device.read_loop():
                 cat_event = categorize(event)
                 if isinstance(cat_event, AbsEvent):
+                    #logger.debug("Event= {}  Cat={}".format(event, cat_event))
+
                     axis_key = ABS[cat_event.event.code]
                     axis_val = event.value
                     # TODO: move to init
+                    logger.debug("Joypad event: {} = {}".format(axis_key, axis_val))
                     if axis_key not in self.controller_state:
                         self.controller_state[axis_key] = 0
 

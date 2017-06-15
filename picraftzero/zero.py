@@ -129,6 +129,9 @@ class Joystick(Device, SourceMixin):
         self.joystick = InputController(self.joystick_id)
         self.joystick.add_listener(self.joystick_event)
 
+        self._x_axis_name = None
+        self._y_axis_name = None
+
         self.messages = MessageReceiver(8001)           # a 'shared' (singleton) resource
         self.messages.add_listener(self.message_recv)
 

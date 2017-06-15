@@ -268,6 +268,6 @@ Your script will now run instead of the default PiCraftZero script every time th
 
 To disable the service run:
 ```bash
-systemctl stop picraftzero
-systemctl disable picraftzero
+sudo systemctl stop picraftzero
+sudo systemctl disable picraftzero
 ```
