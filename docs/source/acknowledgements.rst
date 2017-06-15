@@ -1,6 +1,6 @@
 # Acknowledgements
 
-Thanks to [Brian Corteil](https://github.com/Corteil) of [Coretec Robotic](http://www.core-tec.co.uk) for feedback and the cool robots!
+Thanks to [Brian Corteil](https://github.com/Corteil) of [Coretec Robotics](http://www.core-tec.co.uk) for feedback and the cool robots!
 
 This project would not have been possible without building on the work of :
 

@@ -79,4 +79,21 @@ python setup.py sdist upload
 python setup.py regsiter
 ```
 
-published to : http://pypi.python.org/pypi/TheBubbleworks
+
+useful links:
+
+
+
+https://github.com/WayneKeenan/picraftzero
+
+https://travis-ci.org/WayneKeenan/picraftzero
+
+http://picraftzero.readthedocs.io/en/latest/index.html
+
+https://codeclimate.com/github/WayneKeenan/picraftzero
+
+https://pypi.python.org/pypi?%3Aaction=pkg_edit&name=picraftzero
+
+
+
+

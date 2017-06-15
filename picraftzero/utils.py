@@ -241,7 +241,6 @@ def main_loop():
     global _keep_running
     while _keep_running:
         wait_blocking()
-    logger.info("left main loop")
 
 
 def exit_main():

@@ -377,9 +377,10 @@ def start():
     if config['hmd']['camera_mono_url'].lower().startswith('ws'):
         cs = CameraServer()
         cs.start()
+    logger.info("Started picraftzero")
     main_loop()
 
 
 def stop():
-    logger.info("Stopping")
+    logger.info("Stopping picraftzero")
     exit_main()
