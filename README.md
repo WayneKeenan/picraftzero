@@ -187,14 +187,17 @@ Press reload in your web browser.
 
 
 
-## Running as a service
+# Running as a service
 
-It's possible to run the default Picraftzero script, or your own script, as a service. in order todo this you need to:
-+ install a systemd service
-+ optionally configure picraftzero to use your own script
+It's possible to run the default PicraftZero script, or your own script, as a service. 
+In order todo this you need to:
+
++ Install a systemd service.
++ Optionally, configure PiCraftZero to use your own script.
 
 ### Systemd setup
-Download, enable and start the PiCraftZero systemd service by typing:
+
+Download, enable and start the PiCraftZero systemd service by running:
 
 ```bash
 sudo wget https://raw.githubusercontent.com/WayneKeenan/picraftzero/master/picraftzero/resources/config/picraftzero.service  -O /etc/systemd/system/picraftzero.service
@@ -243,3 +246,13 @@ You should see in the logs something like:
 ... Running user script: /home/pi/my_picraftzero.py
 ```
 
+Your script will now run instead of the default PiCraftZero script every time the Pi boots.
+
+
+### Disabling the service
+
+To disable the service run:
+```bash
+systemctl stop picraftzero
+systemctl disable picraftzero
+```
