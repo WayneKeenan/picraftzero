@@ -22,7 +22,8 @@ This quick start kicks the tyres to check that basic things are ok, this will ru
 To install type in:
 
 ```bash
-sudo apt-get update && sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev python3-pip
+sudo apt-get update
+sudo apt-get install -y libav-tools python3-picamera python3-ws4py python3-smbus python3-dev python3-pip
 sudo pip3 install evdev cap1xxx picraftzero
 ```
 
@@ -72,6 +73,17 @@ A list of the hardware that can be used:
 
 If your using a Piconzero pHAT then attach the pan servo to servo 0 and the tilt servo to servo 1.
 
+If you need to flip the image edit the PicraftZero config file:
+
+```bash
+sudo nano /etc/picraftzero.cfg
+```
+
+Add these lines:
+```
+[camera]
+rotation=180
+```
 
 # Example
 
@@ -163,7 +175,7 @@ If you want to stop the camera service type:
 ```sudo systemctl stop uv4l_raspicam```
 
 
-### Configure PiCraftZero
+### Configure PiCraftZero camera URL
 
 
 Overriding the default config to use the UV4L server,

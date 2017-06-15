@@ -142,11 +142,17 @@ class HTTP11WebSocketWSGIRequestHandler(WSGIRequestHandler):
         handler.http_version="1.1"          # This is the only addition to the original class that this replaces
         handler.run(self.server.get_app())
 
+from picraftzero.config import get_config
+
 def main():
     logger.info('Initializing camera')
     with picamera.PiCamera() as camera:
-        camera.resolution = (WIDTH, HEIGHT)
-        camera.framerate = FRAMERATE
+        config = get_config()
+        w = config.getint('camera', 'width', fallback=640)
+        h = config.getint('camera', 'height', fallback=480)
+        camera.resolution = (w, h)
+        camera.framerate = config.getint('camera', 'framerate', fallback=24)
+        camera.rotation = config.getint('camera', 'rotation', fallback=0)
         sleep(1) # camera warm-up time
         logger.info('Initializing websockets server on port %d' % WS_PORT)
         websocket_server = make_server(
