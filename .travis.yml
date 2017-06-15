@@ -1,11 +1,15 @@
 language: python
 python:
 - '3.4'
-script:
-- python -m unittest discover -s test
+sudo: false
+install:
+  - pip3 install codecov
 before_script:
 - export PYTHONPATH=$PYTHONPATH:$(pwd)
-sudo: false
+script:
+  - coverage run  -m unittest discover -s test
+after_success:
+  - codecov
 deploy:
   provider: pypi
   user: waynek
