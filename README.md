@@ -1,6 +1,6 @@
-[![PyPI version](https://badge.fury.io/py/picraftzero.svg)](https://badge.fury.io/py/picraftzero)
-[![Build Status](https://travis-ci.org/WayneKeenan/picraftzero.svg?branch=master)](https://travis-ci.org/WayneKeenan/picraftzero)
-
+[![PyPI version](https://badge.fury.io/py/picraftzero.svg)](https://badge.fury.io/py/picraftzero) 
+[![Build Status](https://travis-ci.org/WayneKeenan/picraftzero.svg?branch=master)](https://travis-ci.org/WayneKeenan/picraftzero) 
+[![codecov](https://codecov.io/gh/WayneKeenan/picraftzero/branch/master/graph/badge.svg)](https://codecov.io/gh/WayneKeenan/picraftzero)
 
 # PiCraftZero
 
