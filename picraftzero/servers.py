@@ -17,11 +17,6 @@ from picraftzero.thirdparty.SimpleWebSocketServer import SimpleWebSocketServer
 from picraftzero.config import get_json_config, get_config
 
 
-
-
-config = get_config()
-logger.info("Config: {}".format(config))
-
 class CustomRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/config.json':
@@ -41,7 +36,7 @@ class HTTPServer:
 
     def __init__(self, http_port = None):
         self.http_thread = None
-        self.http_port = http_port if http_port else int(config['www']['http_port'])
+        self.http_port = http_port if http_port else get_config().getint('www', 'http_port', fallback=8000)
         TCPServer.allow_reuse_address = True
         self.httpd = None
 
@@ -107,7 +102,7 @@ class WebSocketServer:
 
     def __init__(self, callee, ws_port = None, ws_class=DefaultWebSocketHandler, ):
         self.ws_thread = None
-        self.ws_port = ws_port if ws_port else int(config['www']['ws_port'])
+        self.ws_port = ws_port if ws_port else get_config().getboolean('www', 'ws_port', fallback=8001)
         self.ws = None
         self.ws_class = ws_class
         self.ws_class.callee = callee

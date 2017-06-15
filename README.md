@@ -126,13 +126,13 @@ sudo mv /etc/uv4l/uv4l-raspicam.conf /etc/uv4l/uv4l-raspicam.conf.original
 
 This block below is a single script action and should be executed as one single copy and paste: 
 ```bash
-cat << 'EOF' | sudo tee /etc/uv4l/uv4l-raspicam.conf > /dev/null
+cat << EOF | sudo tee /etc/uv4l/uv4l-raspicam.conf > /dev/null
 driver = raspicam
 auto-video_nr = yes
 frame-buffers = 4
 encoding = mjpeg
-width = 640
-height = 480
+width = 640  
+height = 480 
 framerate = 24
 quality = 7 
 video-denoise = no
@@ -142,6 +142,7 @@ preview = 480
 preview = 240
 preview = 320
 preview = 240
+vflip = no           # flip the image vertically
 EOF
 ```
 

@@ -1,7 +1,7 @@
 import os
 import threading
-import logging
 from picraftzero.utils import arduino_map
+from picraftzero.log import logger
 
 USE_EVENT = True
 USE_PYGAME = True
@@ -11,7 +11,6 @@ HAVE_EVENT = False
 HAVE_PYGAME = False
 HAVE_BLUEDOT = False
 
-logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------------------------------------
 
@@ -26,7 +25,7 @@ try:
     from evdev.ecodes import KEY, SYN, REL, ABS
     HAVE_EVENT = True
 except ImportError:
-    logger.info("InputController Event libraries not found")
+    logger.info("Optional EventDev library not found")
     HAVE_EVENT = False
 
 try:
@@ -34,7 +33,7 @@ try:
     from pygame.locals import *
     HAVE_PYGAME = True
 except ImportError:
-    logger.info("InputController PyGame libraries not found")
+    logger.info("Optional PyGame library not found")
     HAVE_PYGAME = False
 
 
@@ -42,13 +41,13 @@ try:
     from bluedot import BlueDot
     HAVE_BLUEDOT = True
 except ImportError:
-    logger.info("InputController BlueDot libraries not found")
+    logger.info("Optional BlueDot library not found")
     HAVE_BLUEDOT = False
 
 # ---------------------------------------------------------------------------------------------------------
 if HAVE_BLUEDOT and USE_BLUEDOT:
-    logger.info("InputController using BlueDot implementation")
-    logger.warning("Only 1 Joystick axis will be aviailable")
+    logger.info("Using BlueDot implementation")
+    logger.warning("Only 1 Joystick axis will be available")
 
 
     class InputController:
@@ -71,7 +70,7 @@ if HAVE_BLUEDOT and USE_BLUEDOT:
             self.bd.when_moved = lambda x: func(self)
 
 elif HAVE_EVENT and USE_EVENT:
-    logger.info("InputController using Event implementation")
+    logger.info("Using EventDev implementation")
 
     ROCKCANDY_AXIS_DEADZONE = 5
     ROCKCANDY_MAPPING = {
@@ -154,7 +153,7 @@ elif HAVE_EVENT and USE_EVENT:
 
 # ---------------------------------------------------------------------------------------------------------
 elif HAVE_PYGAME and USE_PYGAME:
-    logger.info("InputController using PyGame implementation")
+    logger.info("Using PyGame implementation")
 
     from time import sleep
     from picraftzero.utils import mainthread_dispatch
@@ -313,7 +312,7 @@ elif HAVE_PYGAME and USE_PYGAME:
 
 # ---------------------------------------------------------------------------------------------------------
 else: #Stub
-    logger.warning("InputController failing back to stub implementation")
+    logger.warning("Failing back to stub implementation")
 
     class InputController:
 

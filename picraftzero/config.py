@@ -30,14 +30,14 @@ def get_config():
     config = parse_config()
     return config
 
-def get_config_dict():
-    config = get_config()
+def get_config_dict(config):
     config_dict = {s: dict(config.items(s)) for s in config.sections()}
-    logging.info("Config Dict = {}".format(config_dict))
+    logger.info("Config Dict = {}".format(config_dict))
     return config_dict
 
 
 def get_json_config():
-    return json.dumps(get_config_dict(), indent=4, sort_keys=True)
+    return json.dumps(get_config_dict(get_config()), indent=4, sort_keys=True)
 
 
+get_config_dict(get_config())
