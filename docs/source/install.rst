@@ -83,45 +83,6 @@ If you have a Piconzero attached you should see:
 
 
 
-
-
-### Running as a service
-
-Edit `nano ~/.picraftzero.cfg`
-
-```
-[service]
-script=/home/pi/my_picraftzero.py
-```
-
-
-
-This will run the `pantilt.py` example every boot.
-
-```bash
-cd  ~/bubbleworks/picraftzero/
-sudo sh ./scripts/install_service.sh  scripts/picraftzero.service
-```
-
-To follow the logs type:
-
-```bash
-sudo journalctl -f -u picraftzero.service
-```
-
-
-
-To stop, start or restart the service:
-
-```bash
-sudo systemctl status picraftzero
-sudo systemctl start picraftzero
-sudo systemctl stop picraftzero
-sudo systemctl restart picraftzero
-```
-
-
-
 ### Bonjour/Zeroconf
 
 

@@ -117,7 +117,7 @@ class WebSocketServer:
             except Exception:
                 logger.exception("Failed to close WebSocket")
 
-        except Exception:
+        except Exception as e:
             logger.exception("Failed to create WebSocket")
 
     def stop(self):
@@ -125,7 +125,7 @@ class WebSocketServer:
         try:
             self.ws.stop()
         except:
-            logger.exception("Failed to st WebSocket")
+            logger.exception("Failed to stop WebSocket")
 
 
     def start(self):

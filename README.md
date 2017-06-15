@@ -183,11 +183,63 @@ Now re-run the default script:
 python3 -m picraftzero
 ```
 
-And press reload in your web browser.
+Press reload in your web browser.
 
 
 
 ## Running as a service
 
+It's possible to run the default Picraftzero script, or your own script, as a service. in order todo this you need to:
++ install a systemd service
++ optionally configure picraftzero to use your own script
 
+### Systemd setup
+Download, enable and start the PiCraftZero systemd service by typing:
+
+```bash
+sudo wget https://raw.githubusercontent.com/WayneKeenan/picraftzero/master/picraftzero/resources/config/picraftzero.service  -O /etc/systemd/system/picraftzero.service
+sudo systemctl enable picraftzero
+sudo systemctl start picraftzero
+```
+
+Show the service status:
+```bash
+sudo systemctl status -l picraftzero
+```
+
+Follow the log file: (remove the -f just to show the log file once)
+```bash
+sudo journalctl -f -u picraftzero
+```
+
+
+### Running your own script as a service
+
+Edit the PicraftZero config file:
+
+```bash
+sudo nano /etc/picraftzero.cfg
+```
+
+Add these lines:
+```
+[service]
+script=/home/pi/my_picraftzero.py
+```
+
+Optionally, you could follow the logs before you restart the service (recommended):
+```bash
+sudo journalctl -f -u picraftzero &
+```
+
+Restart the service: 
+```bash
+sudo systemctl restart picraftzero
+```
+
+You should see in the logs something like:
+
+```
+... Running user script: /home/pi/my_picraftzero.py
+```
 
