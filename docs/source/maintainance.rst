@@ -79,9 +79,18 @@ python setup.py sdist upload
 python setup.py regsiter
 ```
 
+---
+
+
+In commit messages use to autamtically close issues use:   close #<ISSUE_NUMBER>
+git tag RELEASE_X_Y_Z
+git push --tags
+
+
+
+---
 
 useful links:
-
 
 
 https://github.com/WayneKeenan/picraftzero

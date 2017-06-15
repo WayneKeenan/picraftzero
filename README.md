@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/picraftzero.svg)](https://badge.fury.io/py/picraftzero)
 [![Build Status](https://travis-ci.org/WayneKeenan/picraftzero.svg?branch=master)](https://travis-ci.org/WayneKeenan/picraftzero)
 
 
@@ -13,6 +14,8 @@ PiCraftZero is:
 # Status
 
 This is a prototype and all feedback is welcomed, please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) for feature requests, questions and bug reports.
+
+This README is all the current documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, very much a work in progress.  
 
 
 # Quick Start - Installing on a Pi
