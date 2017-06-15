@@ -4,13 +4,27 @@ from __future__ import (
     absolute_import,
     division,
 )
+from .log import logger
 
 from time import sleep
 from threading import Lock
 
-import gpiozero.devices
+import gpiozero.pins.data
 from gpiozero.pins.mock import MockPin
-gpiozero.devices.pin_factory = MockPin      # TODO: only do this on non-PI platforms
+
+try:
+    pi_info = gpiozero.pins.data.pi_info()
+    logger.debug("Pi info is {}".format(pi_info))
+    RUNNING_ON_PI = True
+except FileNotFoundError:
+    RUNNING_ON_PI = False
+
+if not RUNNING_ON_PI:
+    logger.info("Not running on a Pi, using MockPin".format())
+    gpiozero.devices.pin_factory = MockPin
+
+
+logger.info("Selected pin factory is {}".format(gpiozero.devices.pin_factory))
 
 from gpiozero.mixins import SourceMixin,SharedMixin
 from gpiozero.devices import Device, CompositeDevice
@@ -21,7 +35,6 @@ from .utils import arduino_map, main_loop, exit_main
 from .inputs.joystick import InputController
 from .providers import get_motor_provider, get_servo_provider
 
-from .log import logger
 
 #formatter = logging.Formatter(LOG_FORMAT)
 #rotating_log_handler = TimedRotatingFileHandler('picraftzero.log',
