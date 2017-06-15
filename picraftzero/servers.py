@@ -123,7 +123,8 @@ class WebSocketServer:
     def stop(self):
         logger.info("Stopping WebSocket server")
         try:
-            self.ws.stop()
+            if self.ws:
+                self.ws.stop()
         except:
             logger.exception("Failed to stop WebSocket")
 
