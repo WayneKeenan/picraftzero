@@ -13,10 +13,13 @@ PiCraftZero is:
    + auto discovering and controlling i2c based motor & servo add-ons for the Raspberry Pi
    + 'steering mixers' for converting joystick axis values to motor speeds 
    + websocket messaging
- + a camera streaming server for single or dual cameras where:
+ + a camera streaming server and web client for single or dual cameras where:
    + remote stereo viewing can use a mobile phone with Google Cardboard 
    + the mobile phones gyro can control a pan/tilt camera mount 
-  
+ 
+ + cross platform, tested to work on Pi, Linux, Mac & Windows.
+ + able to run without any additional hardware (e.g. Pi HATs or joypads), handy for dev & testing.
+ 
 
 # Example
 
@@ -195,8 +198,7 @@ Press reload in your web browser.
 
 # Running as a service
 
-It's possible to run the default PicraftZero script, or your own script, as a system service. 
-In order todo this you need to nstall a systemd configuration file.
+The default PicraftZero script can be run as a systemd service.
 
 It's also possible to configure PiCraftZero to use your own script, TODO:link.
 
