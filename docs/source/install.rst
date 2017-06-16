@@ -93,3 +93,36 @@ Adding [Apples Bonjour Print services](https://support.apple.com/kb/dl999?locale
 
 
 
+
+
+### Running your own script as a service
+
+Edit the PicraftZero config file:
+
+```bash
+sudo nano /etc/picraftzero.cfg
+```
+
+Add these lines:
+```
+[service]
+script=/home/pi/my_picraftzero.py
+```
+
+Follow the log file, in the background, before you restart the service:
+```bash
+sudo journalctl -f -u picraftzero &
+```
+
+Restart the service:
+```bash
+sudo systemctl restart picraftzero
+```
+
+You should see in the logs something like:
+
+```
+... Running user script: /home/pi/my_picraftzero.py
+```
+
+Your script will now run instead of the default PiCraftZero script every time the Pi boots.

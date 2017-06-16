@@ -7,20 +7,25 @@
 
 PiCraftZero is:
 
- + a universal remote control using virtual (web) and physical (handheld) controllers, and 
- + a Python library for receiving controller inputs, based on gpiozero's flow programming model (source/values)
+ + a universal remote control supporting virtual (web) and physical (handheld) controllers. 
+ + a collection of gpiozero compatible Python components for:
+   + receiving joystick updates
+   + auto discovering and controlling i2c based motor & servo add-ons for the Raspberry Pi
+   + 'steering mixers' for converting joystick to motor speeds 
+   + websocket messaging
+  
 
   
 # Status
 
-This is a prototype and all feedback is welcomed, please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) for feature requests, questions and bug reports.
+PiCraft is in beta and all feedback is welcomed, for any feature requests, questions and bug reports please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) 
 
-This README is all the current documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, very much a work in progress.  
+This README is currently the only documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, and very much a work in progress.  
 
 
 # Quick Start - Installing on a Pi
 
-This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun on a Pi with the Pi Camera and i2c enabled.
+This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun when isntalled on a Pi with the Pi Camera and i2c enabled.
 
 To install type in:
 
@@ -36,18 +41,16 @@ To run the default PiCraftZero behaviour which supports controlling 2 motors and
 python3 -m picraftzero
 ```
 
-Open a web browser, on *almost any* device, to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
+Open a web browser, on almost any platform or browser, to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
 
-The browser shuld be in landscape mode (or ona  desktop the windows should be wider than taller)
+The browser should be in landscape mode (or ona  desktop the windows should be wider than taller)
 
 Click on the 'Single Camera' icon in the center of the toolbar.
 
 The right hand side of the screen is virtual joystick used for motor control by default.
-The left hand side of the screen is virtual joystick ised for pan/tilt control by default, if available.
+The left hand side of the screen is virtual joystick used for pan/tilt control by default, if available.
 
-If you move the joysticks around then you should see logging info on screen and if motors and servos connected they should move.
-
-
+If you move the joysticks around then you should see logging info on the console and if motors and servos connected they should move.
 
 
 # Notes
@@ -76,7 +79,7 @@ A list of the hardware that can be used:
 
 If your using a Piconzero pHAT then attach the pan servo to servo 0 and the tilt servo to servo 1.
 
-If you need to flip the image edit the PicraftZero config file:
+If you need to rotate the image edit the PicraftZero config file:
 
 ```bash
 sudo nano /etc/picraftzero.cfg
@@ -88,9 +91,10 @@ Add these lines:
 rotation=180
 ```
 
+
 # Example
 
-A basic robot that has 2 motors, the example below can be found [here](examples/tiny4wd.py) with more comments.
+A basic robot that has 2 motors, the code with more comments can be found [here](examples/tiny4wd.py) .
 
 
 ```python
@@ -110,7 +114,9 @@ There are more in the [examples](examples) folder.
  
 # Enhancements
 
-There are a few changes that can be made such as running as a service and using an alternative camera streaming service that has low latency/high framerates.
+There are a few useful changes that can be made: 
++ running as a service and 
++ using an alternative camera streaming service that has low latency/high framerates.
 
 
 ## Install UV4L Camera Service 
@@ -120,8 +126,6 @@ To use a camera streaming service which has low latency you need to:
 + Install and run Uv4L RaspiCam service
 + Update PiCraftZero config
 
-
-You will need to exit and re-run any running PiCraftZero python script.
 
 Install UV4L:
 
@@ -133,32 +137,12 @@ sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
 ```
 
 
-Backup the UV4L default config file:
+Backup and download UV4L config:
 
 ```bash
 sudo mv /etc/uv4l/uv4l-raspicam.conf /etc/uv4l/uv4l-raspicam.conf.original 
-```
+sudo wget https://raw.githubusercontent.com/WayneKeenan/picraftzero/master/picraftzero/resources/config/uv4l-raspicam.conf  -O /etc/uv4l/uv4l-raspicam.conf
 
-This block below is a single script action and should be executed as one single copy and paste: 
-```bash
-cat << EOF | sudo tee /etc/uv4l/uv4l-raspicam.conf > /dev/null
-driver = raspicam
-auto-video_nr = yes
-frame-buffers = 4
-encoding = mjpeg
-width = 640  
-height = 480 
-framerate = 24
-quality = 7 
-video-denoise = no
-nopreview = no
-fullscreen = no
-preview = 480
-preview = 240
-preview = 320
-preview = 240
-vflip = no           # flip the image vertically
-EOF
 ```
 
 Then run:
@@ -171,7 +155,11 @@ sudo service uv4l_raspicam status
 Check the output and look for: 
 ```   Active: active (running)```
 
-You can verify it's working by going to [http://raspberrypi.local:8080/stream](http://raspberrypi.local:8080/stream)
+
+You can verify UV4L working by going to [http://raspberrypi.local:8080/stream](http://raspberrypi.local:8080/stream)
+
+You will need to stop and re-run the PiCraftZero script.
+
 
 If you want to stop the camera service type:
 
@@ -181,34 +169,28 @@ If you want to stop the camera service type:
 ### Configure PiCraftZero camera URL
 
 
-Overriding the default config to use the UV4L server,
+Add user defined config to use the UV4L server:
 
-This block below is a single script action and should be executed as one single copy and paste: 
 
 ```bash
-cat << 'EOF' | sudo tee /etc/picraftzero.cfg > /dev/null
-[hmd]
-camera_mono_url=http://${WINDOW_LOCATION_HOSTNAME}:8080/stream/video.mjpeg
-EOF
+sudo wget https://raw.githubusercontent.com/WayneKeenan/picraftzero/master/picraftzero/resources/config/picraftzero_snippet_uv4l.cfg  -O /etc/picraftzero.cfg
 ```
 
+Stop and re-run the default script:
 
-Now re-run the default script:
 ```bash
 python3 -m picraftzero
 ```
 
-Press reload in your web browser.
-
+Press reload in your web browser. 
 
 
 # Running as a service
 
-It's possible to run the default PicraftZero script, or your own script, as a service. 
-In order todo this you need to:
+It's possible to run the default PicraftZero script, or your own script, as a system service. 
+In order todo this you need to nstall a systemd configuration file.
 
-+ Install a systemd service.
-+ Optionally, configure PiCraftZero to use your own script.
+It's also possible to configure PiCraftZero to use your own script, TODO:link.
 
 ### Systemd setup
 
@@ -220,49 +202,16 @@ sudo systemctl enable picraftzero
 sudo systemctl start picraftzero
 ```
 
-Show the service status:
+To show the service status run:
+
 ```bash
 sudo systemctl status -l picraftzero
 ```
 
-Follow the log file: (remove the -f just to show the log file once)
+To show the service log file run: 
 ```bash
-sudo journalctl -f -u picraftzero
+sudo journalctl -u picraftzero
 ```
-
-
-### Running your own script as a service
-
-Edit the PicraftZero config file:
-
-```bash
-sudo nano /etc/picraftzero.cfg
-```
-
-Add these lines:
-```
-[service]
-script=/home/pi/my_picraftzero.py
-```
-
-Optionally, you could follow the logs before you restart the service (recommended):
-```bash
-sudo journalctl -f -u picraftzero &
-```
-
-Restart the service: 
-```bash
-sudo systemctl restart picraftzero
-```
-
-You should see in the logs something like:
-
-```
-... Running user script: /home/pi/my_picraftzero.py
-```
-
-Your script will now run instead of the default PiCraftZero script every time the Pi boots.
-
 
 ### Disabling the service
 
