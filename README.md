@@ -11,16 +11,16 @@ PiCraftZero is:
  + a collection of gpiozero compatible Python components for:
    + receiving joystick updates
    + auto discovering and controlling i2c based motor & servo add-ons for the Raspberry Pi
-   + 'steering mixers' for converting joystick to motor speeds 
+   + 'steering mixers' for converting joystick axis values to motor speeds 
    + websocket messaging
   
 
   
 # Status
 
-PiCraft is in beta and all feedback is welcomed, for any feature requests, questions and bug reports please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) 
+PiCraft is in beta and all feedback is welcomed. For any feature requests, questions and bug reports please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) 
 
-This README is currently the only documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, and very much a work in progress.  
+This README is currently the only documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, and is very much a work in progress.  
 
 
 # Quick Start - Installing on a Pi
