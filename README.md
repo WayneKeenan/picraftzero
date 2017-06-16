@@ -13,9 +13,37 @@ PiCraftZero is:
    + auto discovering and controlling i2c based motor & servo add-ons for the Raspberry Pi
    + 'steering mixers' for converting joystick axis values to motor speeds 
    + websocket messaging
+ + a camera streaming server for single or dual cameras where:
+   + remote stereo viewing can use a mobile phone with Google Cardboard 
+   + the mobile phones gyro can control a pan/tilt camera mount 
   
 
-  
+# Example
+
+This is example is for robot that has 2 motors. It can be control using game controllers and web browsers on most desktop and mobile platforms. 
+If a camera is attached then video can be streamed to the client.  You can see it in action [here](https://twitter.com/cannonfodder/status/875368943661318146).
+
+
+```python
+#!/usr/bin/python3
+
+from picraftzero import Joystick, Wheelbase, steering_mixer, start
+
+joystick= Joystick()                         
+motors = Wheelbase(left=0, right=1)  
+
+motors.source = steering_mixer(joystick.values)
+
+start()
+```
+
+
+A version of the code with more comments can be found [here](examples/tiny4wd.py).
+
+There are more in the [examples](examples) folder.
+ 
+ 
+   
 # Status
 
 PiCraft is in beta and all feedback is welcomed. For any feature requests, questions and bug reports please raise a [GitHub issue](https://github.com/WayneKeenan/picraftzero/issues) 
@@ -92,26 +120,6 @@ rotation=180
 ```
 
 
-# Example
-
-A basic robot that has 2 motors, the code with more comments can be found [here](examples/tiny4wd.py) .
-
-
-```python
-#!/usr/bin/python3
-
-from picraftzero import Joystick, Wheelbase, steering_mixer, start
-
-joystick= Joystick()                         
-motors = Wheelbase(left=0, right=1)  
-
-motors.source = steering_mixer(joystick.values)
-
-start()
-```
-
-There are more in the [examples](examples) folder.
- 
 # Enhancements
 
 There are a few useful changes that can be made: 
