@@ -15,6 +15,8 @@ from gpiozero.pins.mock import MockPin
 from picraftzero.config import get_config
 from picraftzero.version import build_string
 
+logger.info("picraftzero, version={}".format(build_string))
+
 try:
     pi_info = gpiozero.pins.data.pi_info()
     logger.debug("Pi info is {}".format(pi_info))
@@ -411,7 +413,6 @@ def start():
     if config['hmd']['camera_mono_url'].lower().startswith('ws'):
         cs = CameraServer()
         cs.start()
-    logger.info("Started picraftzero, {}".format(build_string))
     main_loop()
 
 
