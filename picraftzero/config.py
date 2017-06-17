@@ -26,11 +26,6 @@ def parse_config():
     for line in pformat(sorted(found)).split('\n'):
         logger.info(line)
 
-    logger.info("Combined final config is:")
-    for line in pformat(get_config_dict(config)).split('\n'):
-        logger.info(line)
-
-
     if config.getboolean('logging', 'debug_enabled', fallback=False):
         logger.setLevel(logging.DEBUG)
     else:
@@ -42,6 +37,9 @@ def get_config():
     global _config
     if not _config:
         _config = parse_config()
+        logger.info("Combined final config is:")
+        for line in pformat(get_config_dict(_config)).split('\n'):
+            logger.info(line)
     return _config
 
 def get_config_dict(config):

@@ -12,6 +12,8 @@ from threading import Lock
 import gpiozero.pins.data
 from gpiozero.pins.mock import MockPin
 
+from picraftzero.config import get_config
+
 try:
     pi_info = gpiozero.pins.data.pi_info()
     logger.debug("Pi info is {}".format(pi_info))
@@ -132,13 +134,25 @@ class Joystick(Device, SourceMixin):
         self._x_axis_name = None
         self._y_axis_name = None
 
-        self.messages = MessageReceiver(8001)           # a 'shared' (singleton) resource
+        config = get_config()
+        config_section = 'joystick_{}'.format(self.joystick_id)
+        self.ws_port = config.getint('www', 'ws_port', fallback=8001)
+        self.invert_x_axis = config.getboolean(config_section, 'invert_x_axis', fallback=False)
+        self.invert_y_axis = config.getboolean(config_section, 'invert_y_axis', fallback=False)
+
+        self.messages = MessageReceiver(self.ws_port)           # a 'shared' (singleton) resource
         self.messages.add_listener(self.message_recv)
 
         if joystick_id == 1:
             self._x_axis_name, self._y_axis_name = ('lx', 'ly')
         else:
             self._x_axis_name, self._y_axis_name = ('rx', 'ry')
+
+        logger.info(self)
+
+
+    def __str__(self):
+        return "Joystick(id={}, xname={}, yname={}, xinvert={}, yinvert={}".format(self.joystick_id, self._x_axis_name, self._y_axis_name, self.invert_x_axis, self.invert_y_axis)
 
     def close(self):
         super(Joystick, self).close()
@@ -150,7 +164,11 @@ class Joystick(Device, SourceMixin):
             logger.debug("message_recv: value = {}".format(self._value))
 
     def joystick_event(self, joystick):
-        self._value = (int(joystick.get_value(self._x_axis_name)), int(joystick.get_value(self._y_axis_name)))
+        x_axis = int(joystick.get_value(self._x_axis_name))
+        y_axis = int(joystick.get_value(self._y_axis_name))
+        x_axis = -x_axis if self.invert_x_axis else x_axis
+        y_axis = -y_axis if self.invert_y_axis else y_axis
+        self._value = (x_axis, y_axis)
 
         logger.debug("joystick_event: value = {}".format(self._value))
 
@@ -384,7 +402,6 @@ def custom_source_tool(func, values):
 # Misc
 
 from picraftzero.servers import CameraServer
-from .config import get_config
 
 
 def start():

@@ -95,6 +95,7 @@ elif HAVE_EVENT and USE_EVENT:
         "1118:654": XB360_MAPPING,          # Wired XBox360
         "1118:673": XB360_MAPPING,          # Wireless XBox360
         "3695:532": AFTERGLOW_MAPPING,
+        "DEFAULT": XB360_MAPPING
     }
 
     class InputController:
@@ -123,7 +124,8 @@ elif HAVE_EVENT and USE_EVENT:
             if vpid in VENDOR_PRODUCT_MAPPINGS:
                 self.mapping = VENDOR_PRODUCT_MAPPINGS[vpid]
             else:
-                logger.warning("Input device USB VPID not found for '{}'".format(vpid))
+                logger.warning("Input device USB VPID not found for '{}', using default".format(vpid))
+                self.mapping = VENDOR_PRODUCT_MAPPINGS["DEFAULT"]
 
         def _start(self):
             for event in self.input_device.read_loop():
