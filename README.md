@@ -41,9 +41,7 @@ start()
 ```
 
 
-A version of the code with more comments can be found [here](examples/tiny4wd.py).
-
-There are more in the [examples](examples) folder.
+A commented version of the code can be found [here](examples/tiny4wd.py) along with other [examples](examples).
  
  
    
@@ -73,8 +71,6 @@ python3 -m picraftzero
 ```
 
 Open a web browser, on almost any platform or browser, to: `http://raspberrypi.local:8000/` or `http://<IP>:8000/`
-
-The browser should be in landscape mode (or ona  desktop the windows should be wider than taller)
 
 Click on the 'Single Camera' icon in the center of the toolbar.
 
