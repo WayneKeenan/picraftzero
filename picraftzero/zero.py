@@ -340,7 +340,7 @@ def steering_mixer(values, axis_max=100):
     it = iter(values)
     while True:
         (yaw, throttle) = next(it)
-        yield differential_steering(throttle, yaw, axis_max)
+        yield differential_steering(-yaw, throttle, axis_max)
 
 
 def scaled_pair(values, output_min, output_max, input_min=0, input_max=1):
@@ -410,7 +410,7 @@ def start():
     if config['hmd']['camera_mono_url'].lower().startswith('ws'):
         cs = CameraServer()
         cs.start()
-    logger.info("Started picraftzero")
+    logger.info("Started picraftzero, version".format(version))
     main_loop()
 
 

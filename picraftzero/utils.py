@@ -145,7 +145,7 @@ def default_steering(inThrottle, inYaw):
 #                more of the joystick's range to pivot actions.
 #                Allowable range: (0..+127)
 
-def differential_steering(nJoyY, nJoyX, axis_max=100.0):
+def differential_steering(nJoyX, nJoyY, axis_max=100.0):
     fPivYLimit = 32.0
 
     # TEMP VARIABLES
@@ -176,8 +176,8 @@ def differential_steering(nJoyY, nJoyX, axis_max=100.0):
     fPivScale = 0.0 if abs(nJoyY)>fPivYLimit else 1.0 - abs(nJoyY)/fPivYLimit
 
     # Calculate final mix of Drive and Pivot
-    nMotMixL = (1.0-fPivScale)*nMotPremixL - fPivScale*nPivSpeed
-    nMotMixR = (1.0-fPivScale)*nMotPremixR - fPivScale*-nPivSpeed
+    nMotMixL = (1.0-fPivScale)*nMotPremixL + fPivScale*nPivSpeed
+    nMotMixR = (1.0-fPivScale)*nMotPremixR + fPivScale*-nPivSpeed
 
     return int(nMotMixL), int(nMotMixR)
 

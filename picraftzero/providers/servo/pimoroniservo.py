@@ -46,7 +46,7 @@ class PimoroniPanTiltServo_Real(ServoProvider):
     def set_angle(self, angle):
         msg = "Set Angle {}".format(angle)
         logger.debug(msg)
-        if angle == self.last_angle:
+        if angle == self.last_angle or angle is None:
             return
         logger.info(msg)
         self.last_angle = angle

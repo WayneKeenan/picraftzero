@@ -28,7 +28,7 @@ class PiconzeroMotor(MotorProvider):
     def set_speed(self, speed):
         msg = "set_speed({}, {})".format(self.motor_id, speed)
         logger.debug(msg)
-        if speed == self._last_speed:
+        if speed == self._last_speed or speed is None:
             return
         self._last_speed = speed
         logger.info(msg)

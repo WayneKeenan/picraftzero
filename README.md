@@ -230,7 +230,7 @@ sudo systemctl disable picraftzero
 # Updates
 
 
-When a new `picraftzero` module is published on PyPi tru t he following to update and restart:
+When a new `picraftzero` module is published on PyPi run the following to update and restart:
  
 ```bash
 sudo pip3 install --upgrade picraftzero
@@ -238,7 +238,7 @@ sudo systemctl restart picraftzero
 sudo systemctl status -l picraftzero
 ```
 
-To revert to a specifc version, cahge the version at the end of the line in this example:
+To revert to a specific version, change the version at the end of the line in this example:
 
 ```bash
 sudo pip3 install picraftzero==0.1.6
