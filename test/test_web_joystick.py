@@ -62,5 +62,5 @@ class VirtualJoystickTest(TestCase):
 
         # test only, resolve & remove: might be exiting tetss to soon
         if IS_CI_BUILD:
-            sleep(5)
+            sleep(10)
 
