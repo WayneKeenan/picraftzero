@@ -7,7 +7,7 @@
 
 PiCraftZero is:
 
- + a universal remote control supporting virtual (web) and physical (handheld) controllers. 
+ + a universal remote control supporting virtual (web) and physical (handheld) controllers.
  + a collection of gpiozero compatible Python components for:
    + receiving joystick updates
    + auto discovering and controlling i2c based motor & servo add-ons for the Raspberry Pi
@@ -19,14 +19,21 @@ PiCraftZero is:
  
  + cross platform, tested to work on Pi, Linux, Mac & Windows.
  + able to run without any additional hardware (e.g. Pi HATs or joypads), handy for dev & testing.
+ + able to use desktop connected gamepads and mobile paired gamepads if your PC or mobile webbrowser supports the HTML5 Gamepad API
+  
+  
  
+
+ 
+ 
+
 
 # Example
 
 This is example is for robot that has 2 motors. It can be control using game controllers and web browsers on most desktop and mobile platforms. 
-If a camera is attached then video can be streamed to the client.  You can see it in action [here](https://twitter.com/cannonfodder/status/875368943661318146).
+If a camera is attached then video can be streamed to the client.  
 
-
+ 
 ```python
 #!/usr/bin/python3
 
@@ -43,6 +50,9 @@ start()
 
 A commented version of the code can be found [here](examples/tiny4wd.py) along with other [examples](examples).
  
+ 
+You can see it in action off-road [here](https://twitter.com/cannonfodder/status/875368943661318146). 
+You can see a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) on various desktop and mobile form factors [here](https://twitter.com/wkeenan/status/858679184784338944) and [here](https://twitter.com/wkeenan/status/858695772497465344).
  
    
 # Status
