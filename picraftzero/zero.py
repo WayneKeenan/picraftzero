@@ -159,7 +159,10 @@ class Joystick(Device, SourceMixin):
 
     def close(self):
         super(Joystick, self).close()
-        self.messages.stop()
+        try:
+            self.messages.stop()
+        except ReferenceError:
+            pass    #TODO: shutdown message handler for >1 joysticks cleanly
 
     def message_recv(self, message):
         if message["type"] == "JOYSTICK" and message["id"] == self.joystick_id:
