@@ -1,13 +1,16 @@
 from unittest import TestCase
 
+from os import getenv, environ
+from time import sleep
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
-
 from picraftzero import Joystick, Wheelbase, steering_mixer, start, stop
 
-from os import getenv, environ
-if getenv("CI", False):
+IS_CI_BUILD = getenv("CI", False)
+
+if IS_CI_BUILD:
     username = environ["SAUCE_USERNAME"]
     access_key = environ["SAUCE_ACCESS_KEY"]
     capabilities = {}
@@ -55,7 +58,9 @@ class VirtualJoystickTest(TestCase):
             .move_by_offset(50, 50) \
             .release()
 
-
         drawing.perform()
 
+        # test only, resolve & remove: might be exiting tetss to soon
+        if IS_CI_BUILD:
+            sleep(5)
 
