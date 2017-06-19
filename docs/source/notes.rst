@@ -43,3 +43,12 @@ The web client has 2 virtual joysticks and also supports keyboards and HTML5 Gam
 USB Wireless Joypads connected to the Pi
 
 
+
+
+
+
+Testin gamepad API support
+
+
+http://html5gamepad.com
+

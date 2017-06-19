@@ -153,7 +153,10 @@ def main():
         camera.resolution = (w, h)
         camera.framerate = config.getint('camera', 'framerate', fallback=24)
         camera.rotation = config.getint('camera', 'rotation', fallback=0)
-        sleep(1) # camera warm-up time
+        camera.hflip = config.getboolean('camera', 'hflip', fallback=False)
+        camera.vflip = config.getboolean('camera', 'vflip', fallback=False)
+        camera.led = config.getboolean('camera', 'led', fallback=False)
+        sleep(1) # camera warm-up tim
         logger.info('Initializing websockets server on port %d' % WS_PORT)
         websocket_server = make_server(
             '', WS_PORT,
