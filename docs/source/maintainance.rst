@@ -100,6 +100,13 @@ git push --tags
 
 
 
+testing
+
+Web testing:
+
+Safar driver:  http://elementalselenium.com/tips/69-safari
+chromedriver:  https://sites.google.com/a/chromium.org/chromedriver/downloads
+
 ---
 
 useful links:
