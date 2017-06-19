@@ -3,23 +3,22 @@ python:
 - '3.4'
 sudo: false
 install:
-  - pip3 install codecov gpiozero
+- pip3 install codecov gpiozero
 before_script:
 - export PYTHONPATH=$PYTHONPATH:$(pwd)
 script:
-  - coverage run  -m unittest discover -s test
+- coverage run  -m unittest discover -s test
 after_success:
-  - codecov
+- codecov
 deploy:
   provider: pypi
   user: waynek
   password:
     secure: YwJFPUt9lop1SYMaPu0ZQIX+4REqcv3gnopgqOvqUKe6HVUticg6OW4hmH0sYfVVJEwT71jkv+HWkQAOPeN7PTjB7ErhG/wcdYzfyw3il3+96usO1Yfb/huZPed/NQ87t8TMe1FpeS4e5TZISAcwEeVP34lX2y//FSD+zVDYu9EOWhTmOKy1qrjJaWGBsUG3et3zkgwKKI9uIbp7uekQxlU/5AXMqwFCf7uto3t9odYB3CCC1oQD4X0fEAIWYJEAbwq4XRijvkmciu58JNkDCLF58nHwXtgKyu0dAVrZbF5x+9mBdZ861gxVWX7d1PlvXK/NIcFMntnOgKAM9FKNZXQkFl/85lbeHrL8D+OrXwqKMUKG8aN3FZ2WsvQ9bDm8XTQ9feIw5zrUpdoqBgZQlgBFSNTajR7Vg4t8X/FIBphQOTRfbMa4z9KitSdS6cIfDjmaatQ6iyqO+GEtAg3BqrXZfcROccbjpEcYaZIqzIe43Xs2x/UWDbVZmcEqmi9P2lVqe4B7h2NF/gVHRiVXAA1azERIbXlo9dFwT3XnaRVVPvaPQYyfG48oYOcNvfAQ0Vn0bBkAFaNp7Ukji8U5UXV6lKbkOU/hQWJtqzAdvYt95QW/pkYxQELp9yJtIaxxLc3XfTzeQe5PJjGIkij74oeUdZBEkZFEUKegnmdKpT4=
   on:
-      tags: true
-
+    tags: true
 addons:
   sauce_connect:
     username: "waynekeenan"
-    password:
-      secure: "XoKNopVgb+mje9kcNswENgqZSMbXBDuYoCzePgdNq+6Asz5ydoVD6Hn6HFxRkUSB26AjOWB8CbytAqpIxgMvM7JVRGAmgpsSDQLJhCafA5Q5HMa0SJeRj9BruYeitGfWd0jpKCnqAwj71wT1W0eQHiSOOlwNwrYS/aBmMGjr8d01e0OLnuO0ZjcJLzapzfxxheDRh2u3UxG/IHMTI/rlus/N5+peetoPEShKtIIjuA4Hta1q2npI/OS+rZOdrCVRhu+Z/tzJ21vFh9BNidZ3RbIzlBuotmN4h9zPzfxEBHn/W6JFSvmFVZqGmkzDb4TiAdUNPZ8nM2wfxzG4qR0Ut34Ro++5QwfP+HuP4iVzl+U4tnJ+pf5w4QB4QDYXjcFpK+FiOKOOKkNCRW30rftkAq7nHInyK/GuIp8BuEmXBc3bmiM3RF5yu4VxOsPxOOw8Uc1kiWbCui6ut2uA3mytYzEvhN44HOR6z7im/vIVg0mCuCpCQ6YbVtlyYGoOW9pUuH8vYGMZR65n0mZvwq81SIGxo8hbQr4L01qWcKzsZJbLrSXdLr/dClLFyjrcR8wtMcl14vhd6yH/P74M7ioAyKPce26D1Xc5U8ra6yan99lEEcBX/MLC/zseSbykllL70f2eYL09RV7t7Ge7SJo4tPN+JRWNyFnJ6UDtlaj6cHI="
+  jwt:
+    secure: ytaZVngZcabuavrV5U7gB6o5L5yS5+Pwe8Uh4FIB9UZMtPV+X2ZimKI66ToNNw+MA19VJ4d6rOCPQ79ucw3LgzA0Ln9REJvulALJgKEkIkPeN0pCOKFT40wH3p21Gm664oJFP+5Wq9O6SkKSdbi7d+Zfot3nRHbZNJd9TDnMyaWf1wBSm2fvWOx4yRKnIIcp5bQTHef5pj7fBi9nX8/OBScg3PwnIFNa2AnCPysCTCORRgqST/INvZujamBC7/f4xO5lExotKOvBNAhErPn7wslpQpRAJwGS/cXIlbOE6fnBnMjrXu/c1YGgh6CBX+/zAG+z57qFiP43fJVNjBU83q/ipCZhjH2JdRtFP6z4nnpEttk6AjdB/Ya2ziSCmQmb/3Oi+/2MI7U82tdEeZXD5Ue1lvIFe9fOqnpHOzlGsI8wUhmOpmgCyLWNl77f4ZkXo0H2CzeoihX3xxmwrE5qnDFu6O9GM8XQrw/W/zOJthx7feZxXgqce6h0b+zk/KQz9xz7H2tAom1m84DE6QqkvUI/qMcWyT4poStUKy9WBsehEF/XrEveXluErYDXj0dIcB2RKi8z83BdPWDB6bjDiotZhMvyPY8Kidqqh1jmMxllFj7vmshxbWzDGdCusfa82i4CDpRDkRfiIhNM89qEwT/2LpWfDe85OS5BOp/GjzM=
