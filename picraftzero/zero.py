@@ -163,15 +163,15 @@ class Joystick(Device, SourceMixin):
 
     def message_recv(self, message):
         if message["type"] == "JOYSTICK" and message["id"] == self.joystick_id:
-            self._value = tuple(message['data'])
+            (x_axis, y_axis) = tuple(message['data'])
+            self.write_value(x_axis, y_axis)
+
             logger.debug("message_recv: value = {}".format(self._value))
 
     def joystick_event(self, joystick):
         x_axis = int(joystick.get_value(self._x_axis_name))
         y_axis = int(joystick.get_value(self._y_axis_name))
-        x_axis = -x_axis if self.invert_x_axis else x_axis
-        y_axis = -y_axis if self.invert_y_axis else y_axis
-        self._value = (x_axis, y_axis)
+        self.write_value(x_axis, y_axis)
 
         logger.debug("joystick_event: value = {}".format(self._value))
 
@@ -184,6 +184,10 @@ class Joystick(Device, SourceMixin):
     def value(self, value):
         self._value = value
 
+    def write_value(self, x_axis, y_axis):
+        x_axis = -x_axis if self.invert_x_axis else x_axis
+        y_axis = -y_axis if self.invert_y_axis else y_axis
+        self._value = (x_axis, y_axis)
 
 # ----------------------
 # OUtput device
