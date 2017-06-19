@@ -54,11 +54,23 @@ pip3 freeze > requirements.txt
 
 Publish
 
+Taken care of by Travis-CI integration, manual method:
 
 python setup.py sdist upload
 
 
----------------------------------------------
+
+TO install from git repo
+
+
+
+
+Note, Jessie LIte will need it installed:
+```sudo apt-get install git```
+
+
+
+------------------------------------------
 
 
 (may need to run multiple times for any previous versions)
