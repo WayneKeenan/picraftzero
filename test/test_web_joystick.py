@@ -11,15 +11,15 @@ if getenv("CI", False):
     username = environ["SAUCE_USERNAME"]
     access_key = environ["SAUCE_ACCESS_KEY"]
     capabilities = {}
-    capabilities["browserName"] = environ["chrome"]
+    capabilities["browserName"] = "chrome"
     capabilities["tunnel-identifier"] = environ["TRAVIS_JOB_NUMBER"]
     capabilities["build"] = environ["TRAVIS_BUILD_NUMBER"]
     capabilities["tags"] = [environ["TRAVIS_PYTHON_VERSION"], "CI"]
     hub_url = "%s:%s@localhost:4445" % (username, access_key)
     DRIVER = webdriver.Remote(desired_capabilities=capabilities, command_executor="http://%s/wd/hub" % hub_url)
 else:
-    #DRIVER = webdriver.Safari()
-    DRIVER = webdriver.Chrome()
+    #DRIVER = webdriver.Safari()  # see: http://elementalselenium.com/tips/69-safari
+    DRIVER = webdriver.Chrome()   # see: https://sites.google.com/a/chromium.org/chromedriver/downloads
 
 
 class VirtualJoystickTest(TestCase):
