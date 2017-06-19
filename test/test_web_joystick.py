@@ -6,7 +6,7 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
-from picraftzero import Joystick, Wheelbase, steering_mixer, start, stop
+from picraftzero import Joystick, Wheelbase, steering_mixer, start, stop, logger
 
 IS_CI_BUILD = getenv("CI", False)
 
@@ -51,6 +51,7 @@ class VirtualJoystickTest(TestCase):
 
     def test_press_joystick_0(self):
         canvas = self.driver.find_element_by_id("camera_view")
+        logger.info(canvas)
 
         drawing = ActionChains(self.driver) \
             .click_and_hold(canvas) \
@@ -58,9 +59,12 @@ class VirtualJoystickTest(TestCase):
             .move_by_offset(50, 50) \
             .release()
 
+        logger.info(drawing)
+
         drawing.perform()
 
         # test only, resolve & remove: might be exiting tetss to soon
         if IS_CI_BUILD:
             sleep(10)
 
+        logger.info("done")
