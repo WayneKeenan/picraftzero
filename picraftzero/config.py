@@ -4,7 +4,7 @@ from pprint import pformat
 from configparser import ConfigParser
 from os.path import expanduser, join, split
 from .log import logger
-
+import ast
 
 CONFIG_FILE="picraftzero.cfg"
 
@@ -50,4 +50,7 @@ def get_config_dict(config):
 def get_json_config():
     return json.dumps(get_config_dict(get_config()), indent=4, sort_keys=True)
 
+
+def eval_config_value(section, item):
+    return ast.literal_eval( get_config().get(section, item))
 

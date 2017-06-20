@@ -125,6 +125,7 @@ class WebSocketServer:
         try:
             if self.ws:
                 self.ws.stop()
+                self.ws = None
         except:
             logger.exception("Failed to stop WebSocket")
 
