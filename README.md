@@ -47,13 +47,19 @@ motors.source = steering_mixer(joystick.values)
 start()
 ```
 
-
 A commented version of the code can be found [here](examples/tiny4wd.py) along with other [examples](examples).
  
  
 You can see it in action off-road [here](https://twitter.com/cannonfodder/status/875368943661318146). 
 You can see a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) on various desktop and mobile form factors [here](https://twitter.com/wkeenan/status/858679184784338944) and [here](https://twitter.com/wkeenan/status/858695772497465344).
- 
+
+Below is a 'screenshot' of PiCraftZero running in the Chromium browser on a RaspberryPi fitted with a [Pimoroni HyperPixel](https://shop.pimoroni.com/collections/raspberry-pi/products/hyperpixel) touchscreen. The remote control is communicating via WiFi to the [Coretec Robotics Tiny4WD](http://www.core-tec.co.uk/tiny-4wd/) robot. 
+
+![PiCraftZero on a HyperPixel controling are Coretec Tiny4WD][demopic]
+
+[demopic]: docs/source/images/picraftzero_hyperpixel_tiny4wd.jpg
+
+
    
 # Status
 
@@ -61,12 +67,13 @@ PiCraft is in beta and all feedback is welcomed. For any feature requests, quest
 
 This README is currently the only documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, and is very much a work in progress.  
 
+Pleae note that whilst PiCraftZero is in beta the API's may change, breaking backwards compatibility.
 
 # Quick Start - Installing on a Pi
 
-This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun when isntalled on a Pi with the Pi Camera and i2c enabled.
+This quick start kicks the tyres to check that basic things are ok, this will run standlone on many platforms but please refer to the notes section, as this is more fun when installed on a Pi with the Pi Camera and i2c enabled.
 
-To install type in:
+To install:
 
 ```bash
 sudo apt-get update
@@ -116,7 +123,7 @@ A list of the hardware that can be used:
 
 If your using a Piconzero pHAT then attach the pan servo to servo 0 and the tilt servo to servo 1.
 
-If you need to rotate the image edit the PicraftZero config file:
+If you need to flip the image because the camera image is upside down edit the PicraftZero config file:
 
 ```bash
 sudo nano /etc/picraftzero.cfg
@@ -125,7 +132,8 @@ sudo nano /etc/picraftzero.cfg
 Add these lines:
 ```
 [camera]
-rotation=180
+hflip=yes
+vflip=yes
 ```
 
 
@@ -133,7 +141,7 @@ rotation=180
 
 There are a few useful changes that can be made: 
 + running as a service and 
-+ using an alternative camera streaming service that has low latency/high framerates.
++ using an alternative camera streaming service which has higher framerates than the bundled default in PiCraftZero
 
 
 ## Install UV4L Camera Service 
