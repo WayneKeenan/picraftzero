@@ -51,7 +51,7 @@ A commented version of the code can be found [here](examples/tiny4wd.py) along w
  
  
 You can see it in action off-road [here](https://twitter.com/cannonfodder/status/875368943661318146). 
-You can see a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) on various desktop and mobile form factors [here](https://twitter.com/wkeenan/status/858679184784338944) and [here](https://twitter.com/wkeenan/status/858695772497465344).
+You can see a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) on various desktop and mobile form factors [here](https://youtu.be/pUz_y9WAkc8) and [here](https://youtu.be/DPYABspXSOo).
 
 Below is a 'screenshot' of PiCraftZero running in the Chromium browser on a RaspberryPi fitted with a [Pimoroni HyperPixel](https://shop.pimoroni.com/collections/raspberry-pi/products/hyperpixel) touchscreen. The remote control is communicating via WiFi to the [Coretec Robotics Tiny4WD](http://www.core-tec.co.uk/tiny-4wd/) robot. 
 
