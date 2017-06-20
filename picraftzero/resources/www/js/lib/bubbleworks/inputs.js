@@ -166,11 +166,11 @@
 
                 var x_axis = Math.floor(controller.axes[2] * 100);
                 var y_axis = Math.floor(controller.axes[3] * 100);
-                self.emit_joypad_axis(0, x_axis, y_axis);
+                self.emit_joypad_axis(0, x_axis, -y_axis);
 
                 x_axis = Math.floor(controller.axes[0] * 100);
                 y_axis = Math.floor(controller.axes[1] * 100);
-                self.emit_joypad_axis(1, x_axis, y_axis);
+                self.emit_joypad_axis(1, x_axis, -y_axis);
 
             }
             rAF(updateStatus);
