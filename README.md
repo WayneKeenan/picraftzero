@@ -50,15 +50,22 @@ start()
 A commented version of the code can be found [here](examples/tiny4wd.py) along with other [examples](examples).
  
  
-You can see it in action off-road [here](https://twitter.com/cannonfodder/status/875368943661318146). 
-You can see a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) on various desktop and mobile form factors [here](https://youtu.be/pUz_y9WAkc8) and [here](https://youtu.be/DPYABspXSOo).
-
 Below is a 'screenshot' of PiCraftZero running in the Chromium browser on a RaspberryPi fitted with a [Pimoroni HyperPixel](https://shop.pimoroni.com/collections/raspberry-pi/products/hyperpixel) touchscreen. The remote control is communicating via WiFi to the [Coretec Robotics Tiny4WD](http://www.core-tec.co.uk/tiny-4wd/) robot. 
 
 ![PiCraftZero on a HyperPixel controling are Coretec Tiny4WD][demopic]
 
-[demopic]: docs/source/images/picraftzero_hyperpixel_tiny4wd.jpg
 
+You can watch a Coretech Tiny4WD in action off-road [here](https://twitter.com/cannonfodder/status/875368943661318146).  Thanks to [Brian Corteil](https://twitter.com/CannonFodder)
+
+You can watch a selection of physical, virtual controllers and remote camera viewer (inc. GoogleCardboard VR viewer) in this video:
+[![Controllers](https://img.youtube.com/vi/pUz_y9WAkc8/0.jpg)](https://www.youtube.com/watch?v=pUz_y9WAkc8)
+
+
+You can watch PiCraftZero in action on the iPad, an Android tablet and a Mac in this video:
+[![Controllers](https://img.youtube.com/vi/DPYABspXSOo/0.jpg)](https://www.youtube.com/watch?v=DPYABspXSOo)
+
+
+[demopic]: docs/source/images/picraftzero_hyperpixel_tiny4wd.jpg
 
    
 # Status
