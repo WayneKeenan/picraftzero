@@ -2,6 +2,8 @@
 # coding: Latin-1
 # Load library functions we want
 
+# based on an example from https://github.com/thymjan
+
 from picraftzero import Joystick, Wheelbase, steering_mixer, start
 
 from picraftzero.thirdparty.pimoroni.explorerhat import output  # instead of: from explorerhat import output
