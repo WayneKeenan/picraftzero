@@ -4,9 +4,12 @@
     function BubbleworksLogging(opts) {
         var self = this;
         opts = opts || {};
-        self._debug_enabled = opts.debug_enabled || false;
-        self._send_log = opts.websocket_logging_enabled || false;
+        self._debug_enabled = opts.web_debug_enabled.toUpperCase().indexOf("YES") != -1
+        self._send_log = opts.websocket_logging_enabled.toUpperCase().indexOf("YES") != -1;
         self._websocket = opts.websocket || null;
+
+        console.log(self._debug_enabled)
+        console.log(self._send_log)
 
         window.onerror = function (error, url, line) {
             self.ERROR({acc: 'error', data: 'ERR:' + error + ' URL:' + url + ' L:' + line});
@@ -31,7 +34,15 @@
     };
 
     BubbleworksLogging.prototype._log = function (category, msg) {
-        console.log(category, msg)
+        var self = this;
+
+        if (!self._debug_enabled && (category==="DEBUG"))
+            return;
+
+        if (typeof msg === 'object')
+            msg = JSON.stringify(msg)
+
+        console.log(category + ":" + msg);
         if (self._send_log && _self._websocket) {
             try {
                 self._websocket.send_message("BROWSER_DEBUG", msg);
