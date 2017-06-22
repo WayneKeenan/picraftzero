@@ -1,28 +1,25 @@
+from os import getenv, environ
+from time import sleep
+
 from unittest import TestCase
 from unittest.mock import patch
-
-
-from os import getenv, environ
-
-#from picraftzero.providers.motor import Default
-#@patch('picraftzero.providers.motor.set_speed')
-#def test_set_speed(mock_set_speed):
-#    print("!!!!!!!!!!!!!!!!!!")
-#    mock_set_speed.return_value = None
-
-import picraftzero
-
-
-from picraftzero import Joystick, Wheelbase, steering_mixer, logger
-from picraftzero import PanTilt, scaled_pair
-
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
+import picraftzero
+
+from picraftzero import Joystick, Wheelbase, steering_mixer, logger
+from picraftzero import PanTilt, scaled_pair
+
+
+
 def fake_set_speed(self, speed):
     logger.info("{}".format(speed))
+
+def fake_set_angle(self, angle):
+    logger.info("{}".format(angle))
 
 class VirtualJoystickTest(TestCase):
 
@@ -60,9 +57,9 @@ class VirtualJoystickTest(TestCase):
         VirtualJoystickTest.motors = Wheelbase(left=0, right=1)
         VirtualJoystickTest.motors.source = steering_mixer(VirtualJoystickTest.joystick0.values)
 
-        #VirtualJoystickTest.joystick1 = Joystick(1)
-        #VirtualJoystickTest.pan_tilt = PanTilt(pan=0, tilt=1)
-        #VirtualJoystickTest.pan_tilt.source = scaled_pair(VirtualJoystickTest.joystick1.values, 180, 0, -100, 100)
+        VirtualJoystickTest.joystick1 = Joystick(1)
+        VirtualJoystickTest.pan_tilt = PanTilt(pan=0, tilt=1)
+        VirtualJoystickTest.pan_tilt.source = scaled_pair(VirtualJoystickTest.joystick1.values, 180, 0, -100, 100)
 
         VirtualJoystickTest.driver = DRIVER
         VirtualJoystickTest.driver.implicitly_wait(10)
@@ -75,7 +72,7 @@ class VirtualJoystickTest(TestCase):
         logger.info("Ending")
         VirtualJoystickTest.motors.close()
         VirtualJoystickTest.joystick0.close()
-        #VirtualJoystickTest.joystick1.close()
+        VirtualJoystickTest.joystick1.close()
         VirtualJoystickTest.driver.quit()
 
     def setUp(self):
@@ -106,45 +103,24 @@ class VirtualJoystickTest(TestCase):
             logger.info(entry['message'])
 
 
-    @staticmethod
-    def goto_canvas_pos(x, y):
-        ActionChains(VirtualJoystickTest.driver).move_to_element(VirtualJoystickTest.canvas).move_by_offset(x, y).perform()
-
-    def goto_joystick0_home(self):
-        """
-        Move to the center of the 'right hand half' of the window
-
-        :return:
-        """
-        self.goto_canvas_pos(self.j0_xc, self.j0_yc)
-
-    def goto_joystick1_home(self):
-        """
-        Move to the center of the 'left hand half' of the window
-
-        :return:
-        """
-        self.goto_canvas_pos(self.j1_xc, self.j1_yc)
-
-    @staticmethod
-    def move_mouse(x, y):
-        # TODO: determine why a double move is needed.
+    def move_mouse(self, o_x, o_y, x, y):
+        # force the return to center (-x, -y), doesn't want to play otherwise
         ActionChains(VirtualJoystickTest.driver) \
-            .click_and_hold(VirtualJoystickTest.canvas) \
-            .move_by_offset(0, 0) \
-            .move_by_offset(x, y) \
-            .move_by_offset(x, y) \
-            .release() \
+            .move_to_element_with_offset(VirtualJoystickTest.canvas, o_x, o_y)\
+            .click_and_hold()\
+            .move_by_offset(x, y)\
+            .move_by_offset(-x, -y)\
+            .release()\
             .perform()
 
-            # .drag_and_drop_by_offset(VirtualJoystickTest.canvas, x, y) \
-
-    def _test_move_joystick1(self):
-        self.goto_joystick1_home()
-        self.move_mouse(0, -100)
 
     @patch.object(picraftzero.providers.get_motor_provider(), 'set_speed', fake_set_speed)
-    def test_move_joystick0(self):
-        self.goto_joystick0_home()
-        self.move_mouse(0, -200)
+    def _test_move_joystick0(self):
+        self.move_mouse(self.j0_xc, self.j0_yc, 0, -50)
+        sleep(0.5)
 
+
+    @patch.object(picraftzero.providers.get_servo_provider(), 'set_angle', fake_set_angle)
+    def test_move_joystick1(self):
+        self.move_mouse(self.j1_xc, self.j1_yc, 0, -100)
+        sleep(0.5)

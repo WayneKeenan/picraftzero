@@ -223,12 +223,16 @@
 
         var on_virtual_joystick_down = function (event) {
             var x = 0;
+            var y = 0; // Debug only
             if (event.changedTouches) {
                 x = event.changedTouches[0].pageX;
+                y = event.changedTouches[0].pageY;  // Debug only
             } else {
                 x = event.clientX;
+                y = event.clientY;                  // Debug only
             }
-            self.emit(BubbleworksInputs.JoystickMoveBegin, active_joystick_id);
+            console.log("on_virtual_joystick_down: x,y= "+x+", "+y);
+
 
             joypad_left_active = x < (window.innerWidth / 2);
             joypad_right_active = !joypad_left_active;
@@ -238,11 +242,21 @@
             else
                 active_joystick_id = 0;
 
+            self.emit(BubbleworksInputs.JoystickMoveBegin, active_joystick_id);
+
             return true;
         };
 
         var on_virtual_joystick_up = function (event) {
+            // Debug only:
+            if (event.changedTouches) {
+                console.log("on_virtual_joystick_up: x,y= "+event.changedTouches[0].pageX+", "+event.changedTouches[0].pageY);
+            } else {
+                console.log("on_virtual_joystick_up: x,y= "+event.clientX+", "+event.clientY);
+            }
+
             self.emit(BubbleworksInputs.JoystickMoveEnd, active_joystick_id);
+
 
             // Workaround: Fake a move event
             // self.emit_joypad_axis(active_joystick_id, 0, 0);
@@ -254,6 +268,11 @@
         };
 
         var on_virtual_joystick_move = function (event) {
+            if (event.changedTouches) {
+                console.log("on_virtual_joystick_move: x,y= "+event.changedTouches[0].pageX+", "+event.changedTouches[0].pageY);
+            } else {
+                console.log("on_virtual_joystick_move: x,y= "+event.clientX+", "+event.clientY);
+            }
             var x_axis = Math.floor(virtual_joystick.deltaX());
             var y_axis = Math.floor(virtual_joystick.deltaY());
             self.emit_joypad_axis(active_joystick_id, x_axis, -y_axis);
@@ -271,6 +290,9 @@
 
     BubbleworksInputs.prototype.emit_joypad_axis = function(joystick_id, x_axis, y_axis) {
         //console.log("JOYEMIT: " + joystick_id + ", " + x_axis + ", "+  y_axis)
+        if (joystick_id == -1) {
+            return;
+        }
         var self = this;
         x_axis = Math.floor(x_axis);
         y_axis = Math.floor(y_axis);
