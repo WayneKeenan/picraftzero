@@ -2,6 +2,9 @@ import os
 import threading
 from picraftzero.utils import arduino_map
 from picraftzero.log import logger
+from gpiozero.mixins import SourceMixin,SharedMixin, EventsMixin
+from gpiozero.devices import Device
+
 
 USE_EVENT = True
 USE_PYGAME = True
@@ -21,7 +24,7 @@ HAVE_BLUEDOT = False
 # ---------------------------------------------------------------------------------------------------------
 # Look for Event support first (Linux) then PyGame (Linux, Windows, Mac, other)
 try:
-    from evdev import InputDevice, categorize, AbsEvent, list_devices
+    from evdev import InputDevice, categorize, AbsEvent, KeyEvent, list_devices
     from evdev.ecodes import KEY, SYN, REL, ABS
     HAVE_EVENT = True
 except ImportError:
@@ -78,6 +81,10 @@ elif HAVE_EVENT and USE_EVENT:
         'ly': {'event_name': 'ABS_Y', 'mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
         'rx': {'event_name': 'ABS_Z', 'mapfunc': lambda x: arduino_map(x, 0, 255, -100,  100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
         'ry': {'event_name': 'ABS_RZ','mapfunc': lambda x: arduino_map(x, 0, 255,  100, -100) if abs(x-128) > ROCKCANDY_AXIS_DEADZONE else 0},
+        'BTN_A': 0,
+        'BTN_B': 1,
+        'BTN_C': 2,
+        'BTN_X': 3,
     }
 
     AFTERGLOW_MAPPING = ROCKCANDY_MAPPING
@@ -144,6 +151,16 @@ elif HAVE_EVENT and USE_EVENT:
                         self.controller_state[axis_key] = axis_val
                         if self._listener:
                             self._listener(self)
+                elif isinstance(cat_event, KeyEvent):
+                    #logger.info("KeyEvent, keycode={}, scancode={}, keystate={}".format(cat_event.keycode, cat_event.scancode, cat_event.keystate))
+                    button_id = self._get_button_id(cat_event.keycode)
+                    if button_id is not None:
+                        Button(button_id).value = 1 if bool(cat_event.keystate) else 0
+
+                #else:
+                    #logger.info("{}, {}".format(event, cat_event))
+
+
                 if not self.keep_running:
                     break
 
@@ -163,6 +180,16 @@ elif HAVE_EVENT and USE_EVENT:
                     value = mapfunc(self.controller_state[event_name])
 
             return value
+
+        def _get_button_id(self, keycodes):
+            if not isinstance(keycodes, list):
+                keycodes = [keycodes]
+            for keycode in keycodes:
+                if keycode in self.mapping:
+                    return self.mapping[keycode]
+
+            return None
+
 
 # ---------------------------------------------------------------------------------------------------------
 elif HAVE_PYGAME and USE_PYGAME:
@@ -286,17 +313,9 @@ elif HAVE_PYGAME and USE_PYGAME:
         def _start(self):
             logger.info("Using Joystick : {}".format(self.joystick.get_name()))
 
-            # do a quick sanity test
-            try:
-                pygame.event.get()
-            except pygame.error as e:
-                logger.error("PyGame init error, joysticks will not be working, cause: {}".format(e))
-                self.keep_running = False
-
             while self.keep_running:
                 mainthread_dispatch(lambda: self._process_events(pygame.event.get()))
                 sleep(0.01)
-
         def _process_events(self, events):
             # TODO: to play nicely with other toys in the future this really should be fed from a global event loop
             for e in events:
@@ -309,6 +328,12 @@ elif HAVE_PYGAME and USE_PYGAME:
                             self.controller_state[axis_key] = axis_val
                             if self._listener:
                                 self._listener(self)
+                elif e.type == JOYBUTTONDOWN:
+                    Button(e.button).value = 1
+                elif e.type == JOYBUTTONUP:
+                    Button(e.button).value = 0
+                else:
+                    logger.debug(e)
 
         def add_listener(self, func):
             self._listener = func
@@ -340,3 +365,33 @@ else: #Stub
 
         def add_listener(self, func):
             pass
+
+
+# Button handling (experimental)
+
+class Button(SharedMixin, SourceMixin, Device, EventsMixin):
+    def __init__(self, button_id=0, **args):
+        super(Button, self).__init__(**args)
+        self._button_id = button_id
+        self._value = 0
+
+    # There will ensure there will only ever be one instance of this class per button_id
+    @classmethod
+    def _shared_key(cls, button_id):
+        return button_id
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+        self._fire_events()
+
+Button.is_pressed = Button.is_active
+Button.pressed_time = Button.active_time
+Button.when_pressed = Button.when_activated
+Button.when_released = Button.when_deactivated
+Button.wait_for_press = Button.wait_for_active
+Button.wait_for_release = Button.wait_for_inactive

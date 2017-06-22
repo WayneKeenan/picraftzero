@@ -208,7 +208,7 @@ def i2c_scan(bus_num=1):
 
 
 
-# Must run some activvites on the main thread, e.g. PyGame event polling
+# Must run some activites on the main thread, e.g. PyGame event polling
 
 import queue
 import threading
@@ -231,15 +231,17 @@ def wait_nonblocking():
     while _keep_running:
         try:
             callback = callback_queue.get(False) #doesn't block
+            callback()
         except queue.Empty:
             break
-        callback()
+
 
 
 def main_loop():
     global _keep_running
     while _keep_running:
         wait_blocking()
+        #wait_nonblocking()
 
 
 def exit_main():

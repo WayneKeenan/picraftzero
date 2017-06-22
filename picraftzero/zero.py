@@ -14,6 +14,7 @@ from gpiozero.pins.mock import MockPin
 
 from picraftzero.config import get_config
 from picraftzero.version import build_string
+from picraftzero.inputs.joystick import Button
 
 logger.info("picraftzero, version={}".format(build_string))
 
@@ -315,8 +316,7 @@ class SourcePrinter(SourceMixin, Device):
 
     @value.setter
     def value(self, value):
-        if value:
-            print("SourcePrinter({}): '{}'".format(self._name, value))
+        logger.info("{}: '{}'".format(self._name, value))
 
 
 
