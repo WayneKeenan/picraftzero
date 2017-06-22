@@ -8,9 +8,6 @@
         self._send_log = opts.websocket_logging_enabled.toUpperCase().indexOf("YES") != -1;
         self._websocket = opts.websocket || null;
 
-        console.log(self._debug_enabled)
-        console.log(self._send_log)
-
         window.onerror = function (error, url, line) {
             self.ERROR({acc: 'error', data: 'ERR:' + error + ' URL:' + url + ' L:' + line});
         };

@@ -9,9 +9,9 @@ from os import getenv, environ
 #def test_set_speed(mock_set_speed):
 #    print("!!!!!!!!!!!!!!!!!!")
 #    mock_set_speed.return_value = None
-from picraftzero.providers import _motor_provider_class
 
-_motor_provider_class = None
+import picraftzero
+
 
 from picraftzero import Joystick, Wheelbase, steering_mixer, logger
 from picraftzero import PanTilt, scaled_pair
@@ -20,6 +20,9 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
+def fake_set_speed(self, speed):
+    logger.info("{}".format(speed))
 
 class VirtualJoystickTest(TestCase):
 
@@ -139,11 +142,6 @@ class VirtualJoystickTest(TestCase):
     def _test_move_joystick1(self):
         self.goto_joystick1_home()
         self.move_mouse(0, -100)
-
-    import picraftzero
-
-    def fake_set_speed(self, speed):
-        logger.info("{}".format(speed))
 
     @patch.object(picraftzero.providers.get_motor_provider(), 'set_speed', fake_set_speed)
     def test_move_joystick0(self):

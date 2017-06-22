@@ -17,7 +17,7 @@ PiCraftZero is:
    + remote stereo viewing can use a mobile phone with Google Cardboard 
    + the mobile phones gyro can control a pan/tilt camera mount 
  
- + cross platform, tested to work on Pi, Linux, Mac & Windows.
+ + cross platform, tested to work on Pi (Jessie & Jessie-Lite), Linux, Mac & Windows.
  + able to run without any additional hardware (e.g. Pi HATs or joypads), handy for dev & testing.
  + able to use desktop connected gamepads and mobile paired gamepads if your PC or mobile webbrowser supports the HTML5 Gamepad API
   
@@ -49,6 +49,15 @@ start()
 
 A commented version of the code can be found [here](examples/tiny4wd.py) along with other [examples](examples).
  
+Once picraftzero is installed (see below), download and run the example using:
+ 
+ ```bash
+git clone https://github.com/WayneKeenan/picraftzero.git
+cd picraftzero/examples
+python3 tiny4wd.py
+```
+ 
+# Screenshots 
  
 Below is a 'screenshot' of PiCraftZero running in the Chromium browser on a RaspberryPi fitted with a [Pimoroni HyperPixel](https://shop.pimoroni.com/collections/raspberry-pi/products/hyperpixel) touchscreen. The remote control is communicating via WiFi to the [Coretec Robotics Tiny4WD](http://www.core-tec.co.uk/tiny-4wd/) robot. 
 
