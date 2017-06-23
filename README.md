@@ -1,6 +1,9 @@
 [![PyPI version](https://badge.fury.io/py/picraftzero.svg)](https://badge.fury.io/py/picraftzero) 
 [![Build Status](https://travis-ci.org/WayneKeenan/picraftzero.svg?branch=master)](https://travis-ci.org/WayneKeenan/picraftzero) 
 [![codecov](https://codecov.io/gh/WayneKeenan/picraftzero/branch/master/graph/badge.svg)](https://codecov.io/gh/WayneKeenan/picraftzero)
+[![Build Status](https://saucelabs.com/buildstatus/waynekeenan)](https://saucelabs.com/beta/builds/7d5e074bc62e4f4aad1477ec416f2567)
+<!--[![Build Status](https://saucelabs.com/browser-matrix/waynekeenan.svg)](https://saucelabs.com/beta/builds/7d5e074bc62e4f4aad1477ec416f2567)
+-->
 
 # PiCraftZero
 

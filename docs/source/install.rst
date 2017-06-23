@@ -126,3 +126,16 @@ You should see in the logs something like:
 ```
 
 Your script will now run instead of the default PiCraftZero script every time the Pi boots.
+
+
+
+
+
+
+
+# Install from Github
+
+
+sudo pip3 uninstall picraftzero
+sudo pip3 install git+https://github.com/WayneKeenan/picraftzero
+
