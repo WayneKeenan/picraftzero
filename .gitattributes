@@ -1,1 +1,3 @@
 .idea/* -diff
+picraftzero/resources/www/css/* linguist-vendored
+docs/* linguist-documentation
