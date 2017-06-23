@@ -23,10 +23,13 @@
         this._websocket = new ReconnectingWebSocket(this._url, null, ws_opts);
 
         this._websocket.onopen = function (evt) {
+            console.log('INFO: websocket.onopen: ' + evt.data + '\n');
             self.emit(BubbleworksWebSocketClient.Opened);
         };
 
         this._websocket.onclose = function (evt) {
+            console.log('INFO: websocket.onclose: ' + evt.data + '\n');
+
             self.emit(BubbleworksWebSocketClient.Closed);
         };
 
@@ -45,7 +48,7 @@
             }
         };
         this._websocket.onerror = function (evt) {
-            console.log('ERROR: websocket: ' + evt.data + '\n');
+            console.log('ERROR: websocket.onerror: ' + evt.data + '\n');
             self._websocket.close();
         };
     };
