@@ -20,6 +20,7 @@ deploy:
 addons:
   sauce_connect:
     username: "waynekeenan"
+    no_ssl_bump_domains: "127.0.0.1,localhost"
   jwt:
     secure: ytaZVngZcabuavrV5U7gB6o5L5yS5+Pwe8Uh4FIB9UZMtPV+X2ZimKI66ToNNw+MA19VJ4d6rOCPQ79ucw3LgzA0Ln9REJvulALJgKEkIkPeN0pCOKFT40wH3p21Gm664oJFP+5Wq9O6SkKSdbi7d+Zfot3nRHbZNJd9TDnMyaWf1wBSm2fvWOx4yRKnIIcp5bQTHef5pj7fBi9nX8/OBScg3PwnIFNa2AnCPysCTCORRgqST/INvZujamBC7/f4xO5lExotKOvBNAhErPn7wslpQpRAJwGS/cXIlbOE6fnBnMjrXu/c1YGgh6CBX+/zAG+z57qFiP43fJVNjBU83q/ipCZhjH2JdRtFP6z4nnpEttk6AjdB/Ya2ziSCmQmb/3Oi+/2MI7U82tdEeZXD5Ue1lvIFe9fOqnpHOzlGsI8wUhmOpmgCyLWNl77f4ZkXo0H2CzeoihX3xxmwrE5qnDFu6O9GM8XQrw/W/zOJthx7feZxXgqce6h0b+zk/KQz9xz7H2tAom1m84DE6QqkvUI/qMcWyT4poStUKy9WBsehEF/XrEveXluErYDXj0dIcB2RKi8z83BdPWDB6bjDiotZhMvyPY8Kidqqh1jmMxllFj7vmshxbWzDGdCusfa82i4CDpRDkRfiIhNM89qEwT/2LpWfDe85OS5BOp/GjzM=
-  no_ssl_bump_domains: "127.0.0.1,localhost"
+
