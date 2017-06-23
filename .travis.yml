@@ -6,6 +6,7 @@ install:
 - pip3 install codecov selenium gpiozero
 before_script:
 - export PYTHONPATH=$PYTHONPATH:$(pwd)
+- sed -i "s/^build_string\s*=.*/build_string="release"/g" picraftzero/version.py
 script:
 - coverage run  -m unittest discover -s test
 after_success:

@@ -13,16 +13,17 @@ import gpiozero.pins.data
 from gpiozero.pins.mock import MockPin
 
 from picraftzero.config import get_config
-from picraftzero.version import build_string
+from picraftzero.version import version, build_string
 from picraftzero.inputs.joystick import Button
 
-logger.info("picraftzero, version={}".format(build_string))
+logger.info("picraftzero, version={} build={}".format(version, build_string))
 
 try:
+    # This attempt to import pigpio and if installed then rasies an AttributeError on non Pi platforms
     pi_info = gpiozero.pins.data.pi_info()
     logger.debug("Pi info is {}".format(pi_info))
     RUNNING_ON_PI = True
-except (FileNotFoundError, gpiozero.exc.PinUnknownPi):
+except (FileNotFoundError, gpiozero.exc.PinUnknownPi, AttributeError):
     RUNNING_ON_PI = False
 
 if not RUNNING_ON_PI:
