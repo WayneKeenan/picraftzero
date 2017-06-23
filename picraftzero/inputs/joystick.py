@@ -152,13 +152,13 @@ elif HAVE_EVENT and USE_EVENT:
                         if self._listener:
                             self._listener(self)
                 elif isinstance(cat_event, KeyEvent):
-                    #logger.info("KeyEvent, keycode={}, scancode={}, keystate={}".format(cat_event.keycode, cat_event.scancode, cat_event.keystate))
+                    logger.debug("KeyEvent, keycode={}, scancode={}, keystate={}".format(cat_event.keycode, cat_event.scancode, cat_event.keystate))
                     button_id = self._get_button_id(cat_event.keycode)
                     if button_id is not None:
                         Button(button_id).value = 1 if bool(cat_event.keystate) else 0
 
-                #else:
-                    #logger.info("{}, {}".format(event, cat_event))
+                else:
+                    logger.debug("{}, {}".format(event, cat_event))
 
 
                 if not self.keep_running:
@@ -329,8 +329,10 @@ elif HAVE_PYGAME and USE_PYGAME:
                             if self._listener:
                                 self._listener(self)
                 elif e.type == JOYBUTTONDOWN:
+                    logger.debug(e.button)
                     Button(e.button).value = 1
                 elif e.type == JOYBUTTONUP:
+                    logger.debug(e.button)
                     Button(e.button).value = 0
                 else:
                     logger.debug(e)
