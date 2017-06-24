@@ -7,19 +7,30 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-
 import picraftzero
-
 from picraftzero import Joystick, Wheelbase, steering_mixer, logger
 from picraftzero import PanTilt, scaled_pair
 
 
+class OccuranceRecorder(object):
 
-def fake_set_speed(self, speed):
-    logger.info("{}".format(speed))
+    def __init__(self, allow_repeating_items = True):
+        self._items = []
+        self._allow_repeats = allow_repeating_items
 
-def fake_set_angle(self, angle):
-    logger.info("{}".format(angle))
+    def append(self, item):
+        if not self._allow_repeats and len(self._items)>0 and self._items[-1] == item:
+            return
+        self._items.append(item)
+
+    def list(self):
+        return self._items.copy()
+
+    def clear(self):
+        self._items = []
+
+    def __str__(self):
+        return str(self._items)
 
 class VirtualJoystickTest(TestCase):
 
@@ -35,25 +46,6 @@ class VirtualJoystickTest(TestCase):
     @staticmethod
     def setUpClass():
 
-        if VirtualJoystickTest.IS_CI_BUILD:
-            username = environ["SAUCE_USERNAME"]
-            access_key = environ["SAUCE_ACCESS_KEY"]
-            capabilities = {}
-            capabilities["browserName"] = "chrome"
-            capabilities["tunnel-identifier"] = environ["TRAVIS_JOB_NUMBER"]
-            capabilities["build"] = environ["TRAVIS_BUILD_NUMBER"]
-            capabilities["tags"] = [environ["TRAVIS_PYTHON_VERSION"], "CI"]
-            capabilities['loggingPrefs'] = {'browser': 'ALL'}
-            hub_url = "%s:%s@localhost:4445" % (username, access_key)
-            DRIVER = webdriver.Remote(desired_capabilities=capabilities, command_executor="http://%s/wd/hub" % hub_url)
-        else:
-            #DRIVER = webdriver.Safari()  # see: http://elementalselenium.com/tips/69-safari
-            #DRIVER = webdriver.Chrome()   # see: https://sites.google.com/a/chromium.org/chromedriver/downloads
-            d = DesiredCapabilities.CHROME
-            d['loggingPrefs'] = {'browser': 'ALL'}
-            DRIVER = webdriver.Chrome(desired_capabilities=d)
-
-
         VirtualJoystickTest.joystick0 = Joystick(0)
         VirtualJoystickTest.motors = Wheelbase(left=0, right=1)
         VirtualJoystickTest.motors.source = steering_mixer(VirtualJoystickTest.joystick0.values)
@@ -62,11 +54,35 @@ class VirtualJoystickTest(TestCase):
         VirtualJoystickTest.pan_tilt = PanTilt(pan=0, tilt=1)
         VirtualJoystickTest.pan_tilt.source = scaled_pair(VirtualJoystickTest.joystick1.values, 180, 0, -100, 100)
 
-        VirtualJoystickTest.driver = DRIVER
+
+        # Setup Selenium
+
+        capabilities = DesiredCapabilities.CHROME
+        capabilities['loggingPrefs'] = {'browser': 'ALL'}
+
+        if VirtualJoystickTest.IS_CI_BUILD:
+            username = environ["SAUCE_USERNAME"]
+            access_key = environ["SAUCE_ACCESS_KEY"]
+            capabilities["tunnel-identifier"] = environ["TRAVIS_JOB_NUMBER"]
+            capabilities["build"] = environ["TRAVIS_BUILD_NUMBER"]
+            capabilities["tags"] = [environ["TRAVIS_PYTHON_VERSION"], "CI"]
+            hub_url = "%s:%s@localhost:4445" % (username, access_key)
+            VirtualJoystickTest.driver = webdriver.Remote(desired_capabilities=capabilities, command_executor="http://%s/wd/hub" % hub_url)
+        else:
+            #DRIVER = webdriver.Safari()  # see: http://elementalselenium.com/tips/69-safari
+            #DRIVER = webdriver.Chrome()   # see: https://sites.google.com/a/chromium.org/chromedriver/downloads
+            VirtualJoystickTest.driver = webdriver.Chrome(desired_capabilities=capabilities)
+
         VirtualJoystickTest.driver.implicitly_wait(10)
         VirtualJoystickTest.driver.maximize_window()
         VirtualJoystickTest.driver.get("http://localhost:8000/")
         VirtualJoystickTest.canvas = VirtualJoystickTest.driver.find_element_by_id("camera_view")
+
+        VirtualJoystickTest.fake_set_speed_called_values= [OccuranceRecorder(allow_repeating_items=False),
+                                                           OccuranceRecorder(allow_repeating_items=False)]
+
+        VirtualJoystickTest.fake_set_angle_called_values= [OccuranceRecorder(allow_repeating_items=False),
+                                                           OccuranceRecorder(allow_repeating_items=False)]
 
     @staticmethod
     def tearDownClass():
@@ -93,10 +109,17 @@ class VirtualJoystickTest(TestCase):
         self.assertGreater(self.j1_xc, 0)
         self.assertGreater(self.j1_yc, 0)
 
+
         logger.info("Window size = {}".format(VirtualJoystickTest.driver.get_window_size()))
         logger.info("Canvas x, y, w, h  = {}, {}, {}".format(VirtualJoystickTest.canvas.location, w, h))
         logger.info("j0_xc, j0_yc = {}, {}".format(self.j0_xc, self.j0_yc))
         logger.info("j1_xc, j1_yc = {}, {}".format(self.j1_xc, self.j1_yc))
+
+        VirtualJoystickTest.fake_set_speed_called_values[0].clear()
+        VirtualJoystickTest.fake_set_speed_called_values[1].clear()
+        VirtualJoystickTest.fake_set_angle_called_values[0].clear()
+        VirtualJoystickTest.fake_set_angle_called_values[1].clear()
+
 
     def tearDown(self):
         # Show JavaScript console log
@@ -114,14 +137,33 @@ class VirtualJoystickTest(TestCase):
             .release()\
             .perform()
 
+    def fake_set_speed(self, speed):
+        motor_id = self._motor_id
+        logger.info("{} = {}".format(motor_id, speed))
+        VirtualJoystickTest.fake_set_speed_called_values[motor_id].append(speed)
+
+    def fake_set_angle(self, angle):
+        servo_id = self._servo_id
+        logger.info("{} = {}".format(servo_id, angle))
+        VirtualJoystickTest.fake_set_angle_called_values[servo_id].append(angle)
+
+    def check_speeds(self, motor_id, expected_list):
+        self.assertEqual(VirtualJoystickTest.fake_set_speed_called_values[motor_id].list(), expected_list, "Unexpected motor speeds for {}".format(motor_id))
+
+    def check_angles(self, servo_id, expected_list):
+        self.assertEqual(VirtualJoystickTest.fake_set_angle_called_values[servo_id].list(), expected_list, "Unexpected servo angles for {}".format(servo_id))
+
 
     @patch.object(picraftzero.providers.get_motor_provider(), 'set_speed', fake_set_speed)
-    def _test_move_joystick0(self):
+    def test_joystick0_move_down(self):
         self.move_mouse(self.j0_xc, self.j0_yc, 0, -50)
         sleep(0.5)
-
+        self.check_speeds(0, [0,50,0])
+        self.check_speeds(1, [0,50,0])
 
     @patch.object(picraftzero.providers.get_servo_provider(), 'set_angle', fake_set_angle)
-    def test_move_joystick1(self):
+    def test_joystick1_move_down(self):
         self.move_mouse(self.j1_xc, self.j1_yc, 0, -100)
         sleep(0.5)
+        self.check_angles(0, [90])
+        self.check_angles(1, [90, 0, 90])
