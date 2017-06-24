@@ -17,7 +17,7 @@ joystick_left = Joystick(1)
 messages = MessageReceiver(port=8001)
 
 # Motor assume for left and right:   (full speed backwards) -100  .. 100 (full speed forwards)
-wheelbase = Wheelbase(left=0, right=1)  # left/right= logical id of i2c motor (auto-detected Explorer pHAT or PiConZero)
+wheelbase = Wheelbase(left=1, right=0)  # left/right= logical id of i2c motor (auto-detected Explorer pHAT or PiConZero)
 pan_tilt = PanTilt(pan=0, tilt=1)       # pan/tilt  = logical id of i2c servo (auto-detected PanTilt HAT or PiConZero)
 
 

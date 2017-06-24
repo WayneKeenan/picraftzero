@@ -351,7 +351,7 @@ def steering_mixer(values, axis_max=100):
     it = iter(values)
     while True:
         (yaw, throttle) = next(it)
-        yield differential_steering(-yaw, throttle, axis_max)
+        yield differential_steering(yaw, throttle, axis_max)
 
 
 def scaled_pair(values, output_min, output_max, input_min=0, input_max=1):

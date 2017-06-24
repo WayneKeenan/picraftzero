@@ -88,7 +88,7 @@ PiCraft is in beta and all feedback is welcomed. For any feature requests, quest
 
 This README is currently the only documentation fit for end-user consumption, please ignore the 'docs' folder as that is mostly a collection of badly formatted notes, and is very much a work in progress.  
 
-Pleae note that whilst PiCraftZero is in beta the API's may change, breaking backwards compatibility.
+Please note that whilst PiCraftZero is in beta the API's may change, breaking backwards compatibility.
 
 # Quick Start - Installing on a Pi
 
@@ -169,11 +169,11 @@ There are a few useful changes that can be made:
 
 To use a camera streaming service which has low latency you need to:
 
-+ Install and run Uv4L RaspiCam service
++ Install and run `uv4l` RaspiCam service
 + Update PiCraftZero config
 
 
-Install UV4L:
+Install `uv4l`:
 
 ```bash
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
@@ -183,7 +183,7 @@ sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
 ```
 
 
-Backup and download UV4L config:
+Backup the orignal `uv4l` config file and download a customised `uv4l` config which has some optimsed settings:
 
 ```bash
 sudo mv /etc/uv4l/uv4l-raspicam.conf /etc/uv4l/uv4l-raspicam.conf.original 

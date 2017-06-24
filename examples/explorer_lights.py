@@ -9,7 +9,7 @@ from picraftzero import Joystick, Wheelbase, steering_mixer, start
 from picraftzero.thirdparty.pimoroni.explorerhat import output  # instead of: from explorerhat import output
 
 joystick = Joystick()                  # use the first available controller (e.g. Rock Candy, XBox360) or web client
-motors  = Wheelbase(left=0, right=1)   # left,right = logical id of i2c motor (auto-detected Explorer pHAT or PiConZero)
+motors  = Wheelbase(left=1, right=0)   # left,right = logical id of i2c motor (auto-detected Explorer pHAT or PiConZero)
 motors.source = steering_mixer(joystick.values) # convert joystick axis to motor speeds
 
 
