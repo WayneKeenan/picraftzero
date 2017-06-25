@@ -23,7 +23,7 @@ joystick_right= Joystick(0)
 joystick_left = Joystick(1)
 messages = MessageReceiver(port=8001)
 
-wheelbase = Wheelbase(left=0, right=1)
+wheelbase = Wheelbase(left=1, right=0)
 pan_tilt = PanTilt(pan=0, tilt=1)
 
 wheelbase.source = steering_mixer(joystick_right.values)

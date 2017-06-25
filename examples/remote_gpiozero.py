@@ -12,7 +12,14 @@ sudo service pigpiod status
 
 # on 'desktop'
 """
-pip3 install pigpiod
+git clone https://github.com/rpi-distro/python-gpiozero
+virtualenv -p python3 gpiozero-env
+source gpiozero-env/bin/activate
+cd python-gpiozero
+python setup.py develop
+pip install pigpio
+GPIOZERO_PIN_FACTORY=MockPin pip install picraftzero
+
 
 GPIOZERO_PIN_FACTORY=pigpio PIGPIO_ADDR=192.168.1.108 python
 from gpiozero import LED

@@ -2,9 +2,7 @@ import os
 import threading
 from picraftzero.utils import arduino_map
 from picraftzero.log import logger
-from gpiozero.mixins import SourceMixin,SharedMixin, EventsMixin
-from gpiozero.devices import Device
-
+from picraftzero.zero import Button
 
 USE_EVENT = True
 USE_PYGAME = True
@@ -369,31 +367,3 @@ else: #Stub
             pass
 
 
-# Button handling (experimental)
-
-class Button(SharedMixin, SourceMixin, Device, EventsMixin):
-    def __init__(self, button_id=0, **args):
-        super(Button, self).__init__(**args)
-        self._button_id = button_id
-        self._value = 0
-
-    # There will ensure there will only ever be one instance of this class per button_id
-    @classmethod
-    def _shared_key(cls, button_id):
-        return button_id
-
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
-    def value(self, value):
-        self._value = value
-        self._fire_events()
-
-Button.is_pressed = Button.is_active
-Button.pressed_time = Button.active_time
-Button.when_pressed = Button.when_activated
-Button.when_released = Button.when_deactivated
-Button.wait_for_press = Button.wait_for_active
-Button.wait_for_release = Button.wait_for_inactive

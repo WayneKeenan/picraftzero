@@ -4,6 +4,11 @@ from setuptools import setup, find_packages
 from pprint import pformat
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
+import gpiozero
+from gpiozero.pins.mock import MockPin
+
+gpiozero.devices.pin_factory = MockPin
+
 from picraftzero.version import version
 
 install_requires = ['gpiozero']       # optional: #cap1xxx==0.1.3 evdev==0.6.4x

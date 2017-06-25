@@ -9,38 +9,20 @@ from .log import logger
 from time import sleep
 from threading import Lock
 
-import gpiozero.pins.data
-from gpiozero.pins.mock import MockPin
 
 from picraftzero.config import get_config
 from picraftzero.version import version, build_string
-from picraftzero.inputs.joystick import Button
-
-logger.info("picraftzero, version={} build={}".format(version, build_string))
-
-try:
-    # This attempt to import pigpio and if installed then rasies an AttributeError on non Pi platforms
-    pi_info = gpiozero.pins.data.pi_info()
-    logger.debug("Pi info is {}".format(pi_info))
-    RUNNING_ON_PI = True
-except (FileNotFoundError, gpiozero.exc.PinUnknownPi, AttributeError):
-    RUNNING_ON_PI = False
-
-if not RUNNING_ON_PI:
-    logger.info("Not running on a Pi, using MockPin".format())
-    gpiozero.devices.pin_factory = MockPin
 
 
-logger.info("Selected pin factory is {}".format(gpiozero.devices.pin_factory))
-
-from gpiozero.mixins import SourceMixin,SharedMixin
+from gpiozero.mixins import SourceMixin,SharedMixin, EventsMixin
 from gpiozero.devices import Device, CompositeDevice
 
 
 from .servers import HTTPServer, WebSocketServer as WSS
 from .utils import arduino_map, main_loop, exit_main
-from .inputs.joystick import InputController
 from .providers import get_motor_provider, get_servo_provider
+
+logger.info("picraftzero, version={} build={}".format(version, build_string))
 
 
 #formatter = logging.Formatter(LOG_FORMAT)
@@ -409,6 +391,34 @@ def custom_source_tool(func, values):
     while True:
         yield func(*next(it))
 
+    # Button handling (experimental)
+
+class Button(SharedMixin, SourceMixin, Device, EventsMixin):
+    def __init__(self, button_id=0, **args):
+        super(Button, self).__init__(**args)
+        self._button_id = button_id
+        self._value = 0
+
+    # There will ensure there will only ever be one instance of this class per button_id
+    @classmethod
+    def _shared_key(cls, button_id):
+        return button_id
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+        self._fire_events()
+
+Button.is_pressed = Button.is_active
+Button.pressed_time = Button.active_time
+Button.when_pressed = Button.when_activated
+Button.when_released = Button.when_deactivated
+Button.wait_for_press = Button.wait_for_active
+Button.wait_for_release = Button.wait_for_inactive
 
 # Misc
 
@@ -427,3 +437,6 @@ def start():
 def stop():
     logger.info("Stopping picraftzero")
     exit_main()
+
+# at the end here  because of circular dependancy with inputs.joystick
+from .inputs.joystick import InputController
