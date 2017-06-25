@@ -1,14 +1,18 @@
-#!/usr/bin/
+#!/usr/bin/python3
 
-# Demotration of using remote GPIO access with gpiozero
+# Example of using remote GPIO access with gpiozero, installing picraftzero on the target Pi is not required.
 # For setup and more info see: https://gpiozero.readthedocs.io/en/docs-updates/remote_gpio.html
 
-# Enable and configure remote gpiozero support
+# Run using:
+# GPIOZERO_PIN_FACTORY=PiGPIOPin PIGPIO_ADDR=raspberry.local python3 remote_gpiozero.py
+
+# If env var not present then default them:
 from os import environ
-environ['GPIOZERO_PIN_FACTORY'] = 'PiGPIOPin'
-environ['PIGPIO_ADDR'] = 'raspberrypi.local'        # or IP address '192.168.1.108'
+if 'GPIOZERO_PIN_FACTORY' not in environ:
+    environ['GPIOZERO_PIN_FACTORY'] = 'PiGPIOPin'
+    environ['PIGPIO_ADDR'] = 'raspberrypi.local'        # or IP address '192.168.1.108'
 
-
+# ------------------------------------------------------------------------
 # Carry on as normal...
 
 from gpiozero import LED
