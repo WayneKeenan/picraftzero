@@ -52,3 +52,30 @@ Testin gamepad API support
 
 http://html5gamepad.com
 
+
+
+##################################################################
+
+Remote GPIOZero
+
+
+
+# on pi:
+"""
+sudo wget https://raw.githubusercontent.com/joan2937/pigpio/master/util/pigpiod -O /etc/init.d/pigpiod
+sudo chmod +x /etc/init.d/pigpiod
+sudo update-rc.d pigpiod defaults
+sudo service pigpiod start
+sudo service pigpiod status
+"""
+
+# on 'desktop'
+"""
+git clone https://github.com/rpi-distro/python-gpiozero
+virtualenv -p python3 gpiozero-env
+source gpiozero-env/bin/activate
+cd python-gpiozero
+python setup.py develop
+pip install pigpio
+
+"""
