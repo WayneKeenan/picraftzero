@@ -1,46 +1,40 @@
+#!/usr/bin/
 
+# Demotration of using remote GPIO access with gpiozero
+# For setup and more info see: https://gpiozero.readthedocs.io/en/docs-updates/remote_gpio.html
 
-# on pi:
-"""
-sudo wget https://raw.githubusercontent.com/joan2937/pigpio/master/util/pigpiod -O /etc/init.d/pigpiod
-sudo chmod +x /etc/init.d/pigpiod
-sudo update-rc.d pigpiod defaults
-sudo service pigpiod start
-sudo service pigpiod status
-"""
-
-
-# on 'desktop'
-"""
-git clone https://github.com/rpi-distro/python-gpiozero
-virtualenv -p python3 gpiozero-env
-source gpiozero-env/bin/activate
-cd python-gpiozero
-python setup.py develop
-pip install pigpio
-GPIOZERO_PIN_FACTORY=MockPin pip install picraftzero
-
-
-GPIOZERO_PIN_FACTORY=pigpio PIGPIO_ADDR=192.168.1.108 python
-from gpiozero import LED
-led = LED(17)
-led.value=0.5
-"""
-
-
-
+# Enable and configure remote gpiozero support
 from os import environ
-environ['GPIOZERO_PIN_FACTORY'] = 'pigpio'
-environ['PIGPIO_ADDR'] = 'raspberrypi.local'
+environ['GPIOZERO_PIN_FACTORY'] = 'PiGPIOPin'
+environ['PIGPIO_ADDR'] = 'raspberrypi.local'        # or IP address '192.168.1.108'
 
-#import gpiozero.devices
-#from gpiozero.pins.pigpiod import PiGPIOPin
-#gpiozero.devices.pin_factory = PiGPIOPin
 
-from signal import pause
+# Carry on as normal...
+
 from gpiozero import LED
+from picraftzero import Joystick, Button, start
+
+joystick = Joystick()                   # use the first available controller's rightmost joystick (required)
+button0 = Button(0)                     # attach some buttons by id
 
 led = LED(17)
-led.on()
 
-pause()
+
+def button0_pressed():
+    print("on")
+    led.on()
+
+def button0_released():
+    print("off")
+    led.off()
+
+
+# Use the gpiozero callback style:
+button0.when_pressed = button0_pressed
+button0.when_released= button0_released
+
+# Or use the spiozero source/value style:
+#led.source = button0.values
+
+
+start()
