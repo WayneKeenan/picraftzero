@@ -1,6 +1,6 @@
 {
-  "short_name": "AstralPi Viewer",
-  "name": "AstralPi",
+  "short_name": "PiCraftZero Viewer",
+  "name": "PiCraftZero",
   "icons": [
     {
       "src": "js/lib/bubbleworks/images/icons/android-launcher-icon-4x.png",

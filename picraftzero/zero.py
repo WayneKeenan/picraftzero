@@ -262,6 +262,11 @@ class PanTilt(SourceMixin, CompositeDevice):
             pan_servo=PiCraftServo(pan),
             tilt_servo=PiCraftServo(tilt),
             _order=('pan_servo', 'tilt_servo'))
+        config = get_config()
+        config_section = 'pantilt_0'
+        self.invert_pan_axis = config.getboolean(config_section, 'invert_pan_axis', fallback=False)
+        self.invert_tilt_axis = config.getboolean(config_section, 'invert_tilt_axis', fallback=False)
+
 
     @property
     def value(self):
@@ -275,6 +280,11 @@ class PanTilt(SourceMixin, CompositeDevice):
 
     @value.setter
     def value(self, value):
+        if self.invert_pan_axis:
+            value[0] = 180 - value[0]
+        if self.invert_tilt_axis:
+            value[1] = 180 - value[1]
+
         self.pan_servo.value, self.tilt_servo.value = value
 
 # Debugging Helper

@@ -17,6 +17,8 @@ from picraftzero.thirdparty.SimpleWebSocketServer import SimpleWebSocketServer
 from picraftzero.config import get_json_config, get_config
 
 
+
+
 class CustomRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/config.json':
@@ -29,6 +31,13 @@ class CustomRequestHandler(SimpleHTTPRequestHandler):
         else:
             return SimpleHTTPRequestHandler.do_GET(self)
 
+    def end_headers(self):
+        self.send_my_headers()
+
+        SimpleHTTPRequestHandler.end_headers(self)
+
+    def send_my_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
 
 
 class HTTPServer:
