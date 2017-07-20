@@ -54,3 +54,5 @@ target/
 
 .idea
 
+picraftzero/resources/www/uv4l/ar picraftzero/resources/www/uv4l/cv.data picraftzero/resources/www/uv4l/cv.js picraftzero/resources/www/uv4l/face-detection.js picraftzero/resources/www/uv4l/index.html picraftzero/resources/www/uv4l/main.js picraftzero/resources/www/uv4l/signalling.js
+picraftzero/resources/www/uv4l
