@@ -217,7 +217,7 @@ class VirtualJoystickTest(TestCase):
             .perform()
 
         # pause at end of test to give websocket comms a chance before moving on.
-        sleep(1)
+        sleep(3)
 
     def move_joystick(self, joystick_id, delta_x, delta_y):
         if joystick_id == 0:
