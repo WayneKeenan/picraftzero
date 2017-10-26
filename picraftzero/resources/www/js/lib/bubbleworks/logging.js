@@ -40,7 +40,7 @@
             msg = JSON.stringify(msg)
 
         console.log(category + ":" + msg);
-        if (self._send_log && _self._websocket) {
+        if (self._send_log && self._websocket) {
             try {
                 self._websocket.send_message("BROWSER_DEBUG", msg);
             } catch (e) {
