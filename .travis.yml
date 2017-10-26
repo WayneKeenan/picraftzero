@@ -3,7 +3,7 @@ python:
 - '3.4'
 sudo: false
 install:
-- pip3 install codecov selenium gpiozero==1.3.2
+- pip3 install codecov selenium gpiozero
 before_script:
 - export PYTHONPATH=$PYTHONPATH:$(pwd)
 - sed -i 's/^build_string\s*=.*/build_string="release"/g' picraftzero/version.py
