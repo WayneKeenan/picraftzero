@@ -86,6 +86,7 @@ elif HAVE_EVENT and USE_EVENT:
     }
 
     AFTERGLOW_MAPPING = ROCKCANDY_MAPPING
+    PIHUT_HJDX_MAPPING = ROCKCANDY_MAPPING
 
     XB360_AXIS_DEADZONE = 500
     XB360_MAPPING = {
@@ -97,6 +98,7 @@ elif HAVE_EVENT and USE_EVENT:
 
     VENDOR_PRODUCT_MAPPINGS = {
         "3695:296": ROCKCANDY_MAPPING,
+        "9571:1318": PIHUT_HJDX_MAPPING,
         "1118:654": XB360_MAPPING,          # Wired XBox360
         "1118:673": XB360_MAPPING,          # Wireless XBox360
         "3695:532": AFTERGLOW_MAPPING,
@@ -240,6 +242,7 @@ elif HAVE_PYGAME and USE_PYGAME:
         "Wireless 360 Controller": XB360_MAPPING,
         "Xbox 360 Wired Controller": XB360_MAPPING,         # Mac *1
         "Microsoft X-Box 360 pad": XB360_MAPPING,           # Pi  *1     *1 = same actual controller
+        "hongjingda HJD-X": ROCKCANDY_MAPPING               # PiHut JoyPad
     }
 
 
