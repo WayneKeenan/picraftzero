@@ -1,15 +1,19 @@
 import os
+import re, os
 import unittest
 from setuptools import setup, find_packages
-from pprint import pformat
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
+version_file=os.path.join(base_dir, "picraftzero", "version.py")
+with open(version_file, "rt") as f:
+    verstrline = f.read()
+    vsre = r"^version = ['\"]([^'\"]*)['\"]"
+    mo = re.search(vsre, verstrline, re.M)
+    if mo:
+        __version__ = mo.group(1)
+    else:
+        raise RuntimeError("Unable to find version string in %s." % (version_file,))
 
-import gpiozero
-from gpiozero.pins.mock import MockPin
-
-gpiozero.devices.pin_factory = MockPin
-
-from picraftzero.version import version
 
 install_requires = ['gpiozero']       # optional: #cap1xxx==0.1.3 evdev==0.6.4x
 tests_require = ['selenium']
@@ -24,7 +28,7 @@ def test_suite():
 
 setup(
     name='picraftzero',
-    version=version,
+    version=__version__ ,
     description="A library for building universal controls for robots",
     #long_description="\n\n".join([
     #    open(os.path.join(base_dir, "README.md"), "r").read(),
