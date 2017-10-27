@@ -106,12 +106,14 @@ class VirtualJoystickTest(TestCase):
         VirtualJoystickTest.joystick0 = Joystick(MOTOR_JOYSTICK_ID)
         VirtualJoystickTest.motors = Wheelbase(left=LEFT_MOTOR_ID, right=RIGHT_MOTOR_ID)
         VirtualJoystickTest.motors.source = steering_mixer(VirtualJoystickTest.joystick0.values)
+        #VirtualJoystickTest.motors.source_delay = 0.1
 
         VirtualJoystickTest.joystick1 = Joystick(PANTILT_JOYSTICK_ID)
         VirtualJoystickTest.pan_tilt = PanTilt(pan=PAN_SERVO_ID, tilt=TILT_SERVO_ID)
         VirtualJoystickTest.pan_tilt.source = scaled_pair(VirtualJoystickTest.joystick1.values,
                                                           MAX_ANGLE, MIN_ANGLE,
                                                           JOY_AXIS_MIN, JOY_AXIS_MAX)
+        #VirtualJoystickTest.pan_tilt.source_delay = 0.1
 
         # Setup Selenium
 
@@ -212,6 +214,11 @@ class VirtualJoystickTest(TestCase):
             .move_to_element_with_offset(VirtualJoystickTest.canvas, o_x, o_y)\
             .click_and_hold()\
             .move_by_offset(x, y)\
+            .perform()
+
+        sleep(0.1)
+
+        ActionChains(VirtualJoystickTest.driver) \
             .move_by_offset(-x, -y)\
             .release()\
             .perform()
@@ -227,6 +234,8 @@ class VirtualJoystickTest(TestCase):
         else:
             raise ValueError("Not a valid joystick id {}".format(joystick_id))
 
+        # This wasn't necessary in chromedriver 22
+        self.move_mouse(self.j0_xc, self.j0_yc, 0, 0)
 
     # ------------------------------------------------------------------------
     # ------------------------------------------------------------------------
@@ -235,49 +244,49 @@ class VirtualJoystickTest(TestCase):
     # ------------------------------------------------------------------------
     # Motor tests
 
-    # def test_joystick0_move_up_max(self):
-    #     self.move_joystick(0, JOY_CENTER, JOY_UP)
-    #     self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED,  MAX_SPEED, REST_SPEED])
-    #     self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  MAX_SPEED, REST_SPEED])
-    #
-    # def test_joystick0_move_down_max(self):
-    #     self.move_joystick(0, JOY_CENTER, JOY_DOWN)
-    #     self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED, -MAX_SPEED, REST_SPEED])
-    #     self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED, -MAX_SPEED, REST_SPEED])
-    #
-    # def test_joystick0_move_left_max(self):
-    #     self.move_joystick(0, JOY_LEFT, JOY_CENTER)
-    #     logger.info(VirtualJoystickTest.fake_set_speed_called_values[0])
-    #     logger.info(VirtualJoystickTest.fake_set_speed_called_values[1])
-    #
-    #     self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED, -MAX_SPEED, REST_SPEED])
-    #     self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  MAX_SPEED, REST_SPEED])
-    #
-    # def test_joystick0_move_right_max(self):
-    #     self.move_joystick(0, JOY_RIGHT, JOY_CENTER)
-    #     self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED,   MAX_SPEED, REST_SPEED])
-    #     self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  -MAX_SPEED, REST_SPEED])
+    def test_joystick0_move_up_max(self):
+        self.move_joystick(0, JOY_CENTER, JOY_UP)
+        self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED,  MAX_SPEED, REST_SPEED])
+        self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  MAX_SPEED, REST_SPEED])
+
+    def test_joystick0_move_down_max(self):
+        self.move_joystick(0, JOY_CENTER, JOY_DOWN)
+        self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED, -MAX_SPEED, REST_SPEED])
+        self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED, -MAX_SPEED, REST_SPEED])
+
+    def test_joystick0_move_left_max(self):
+        self.move_joystick(0, JOY_LEFT, JOY_CENTER)
+        logger.info(VirtualJoystickTest.fake_set_speed_called_values[0])
+        logger.info(VirtualJoystickTest.fake_set_speed_called_values[1])
+
+        self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED, -MAX_SPEED, REST_SPEED])
+        self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  MAX_SPEED, REST_SPEED])
+
+    def test_joystick0_move_right_max(self):
+        self.move_joystick(0, JOY_RIGHT, JOY_CENTER)
+        self.check_speeds(LEFT_MOTOR_ID,  [REST_SPEED,   MAX_SPEED, REST_SPEED])
+        self.check_speeds(RIGHT_MOTOR_ID, [REST_SPEED,  -MAX_SPEED, REST_SPEED])
 
 
     # ------------------------------------------------------------------------
     # Servo tests
 
-    # def test_joystick1_move_up_max(self):
-    #     self.move_joystick(1, JOY_CENTER, JOY_UP)
-    #     self.check_angles(PAN_SERVO_ID,  [REST_ANGLE])
-    #     self.check_angles(TILT_SERVO_ID, [REST_ANGLE, MIN_ANGLE, REST_ANGLE])
-    #
-    # def test_joystick1_move_down_max(self):
-    #     self.move_joystick(1, JOY_CENTER, JOY_DOWN)
-    #     self.check_angles(PAN_SERVO_ID,  [REST_ANGLE])
-    #     self.check_angles(TILT_SERVO_ID, [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
-    #
-    # def test_joystick1_move_left_max(self):
-    #     self.move_joystick(1, JOY_LEFT, JOY_CENTER)
-    #     self.check_angles(PAN_SERVO_ID,  [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
-    #     self.check_angles(TILT_SERVO_ID, [REST_ANGLE])
-    #
-    # def test_joystick1_move_left_max(self):
-    #     self.move_joystick(1, JOY_LEFT, JOY_CENTER)
-    #     self.check_angles(PAN_SERVO_ID,  [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
-    #     self.check_angles(TILT_SERVO_ID, [REST_ANGLE])
+    def test_joystick1_move_up_max(self):
+        self.move_joystick(1, JOY_CENTER, JOY_UP)
+        self.check_angles(PAN_SERVO_ID,  [REST_ANGLE])
+        self.check_angles(TILT_SERVO_ID, [REST_ANGLE, MIN_ANGLE, REST_ANGLE])
+
+    def test_joystick1_move_down_max(self):
+        self.move_joystick(1, JOY_CENTER, JOY_DOWN)
+        self.check_angles(PAN_SERVO_ID,  [REST_ANGLE])
+        self.check_angles(TILT_SERVO_ID, [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
+
+    def test_joystick1_move_left_max(self):
+        self.move_joystick(1, JOY_LEFT, JOY_CENTER)
+        self.check_angles(PAN_SERVO_ID,  [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
+        self.check_angles(TILT_SERVO_ID, [REST_ANGLE])
+
+    def test_joystick1_move_left_max(self):
+        self.move_joystick(1, JOY_LEFT, JOY_CENTER)
+        self.check_angles(PAN_SERVO_ID,  [REST_ANGLE, MAX_ANGLE, REST_ANGLE])
+        self.check_angles(TILT_SERVO_ID, [REST_ANGLE])
