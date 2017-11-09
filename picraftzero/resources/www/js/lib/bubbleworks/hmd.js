@@ -228,6 +228,12 @@
 
     BubbleworksHMD.prototype.setup_mjpg_camera_mode = function (camera_view, camera_mode) {
         var self = this;
+
+        if (!camera_view) {
+            console.log("camera_view is null");
+            return;
+        }
+
         switch (camera_mode) {
 
             case CameraDisplayMode.ONE_CAM_DUAL:
@@ -338,6 +344,9 @@
         var width = 1, height = 1;
         var image_width = 0;
 
+        if (!camera_view)
+            return;
+
         initialize();
 
         function initialize() {
@@ -383,6 +392,10 @@
     BubbleworksHMD.prototype.init_one_cam_dual_ws = function () {
         var self = this;
         var camera_view = document.getElementById('camera_view');
+
+        if (!camera_view)
+            return;
+
         var html_canvas_left = document.createElement("canvas");
         var html_canvas_right = document.createElement("canvas");
         var client = new WebSocket(self._camera_mono_url);
@@ -391,6 +404,7 @@
         var canvas_refresh_timer = 0;
 
         var width = 1, height = 1;
+
 
         initialize();
 
@@ -416,12 +430,16 @@
         }
 
         function redraw() {
+            if (!camera_view)
+                return;
             var destCtx = html_canvas_right.getContext('2d');
             destCtx.drawImage(html_canvas_left, 0, 0);
         }
 
 
         function resize_canvas() {
+            if (!camera_view)
+                return;
             width = window.innerWidth/2;
             height = window.innerHeight;
 
@@ -448,6 +466,8 @@
     BubbleworksHMD.prototype.init_one_cam_single_ws = function () {
         var self = this;
         var camera_view = document.getElementById('camera_view');
+        if (!camera_view)
+            return;
         var html_canvas_left = document.createElement("canvas");
         var client = new WebSocket(self._camera_mono_url);
         var context_left = 0;
