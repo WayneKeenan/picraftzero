@@ -173,11 +173,20 @@ To use a camera streaming service which has low latency you need to:
 + Update PiCraftZero config
 
 
-Install `uv4l`:
+Install `uv4l` (Raspbian Jessie only):
 
 ```bash
 curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
 echo 'deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ jessie main' | sudo tee --append /etc/apt/sources.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
+```
+
+Install `uv4l` (Raspbian Stretch only):
+
+```bash
+curl http://www.linux-projects.org/listing/uv4l_repo/lpkey.asc | sudo apt-key add -
+deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/stretch stretch main
 sudo apt-get update
 sudo apt-get install -y uv4l uv4l-raspicam  uv4l-raspicam-extras   uv4l-server
 ```
