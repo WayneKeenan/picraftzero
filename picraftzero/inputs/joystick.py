@@ -3,10 +3,14 @@ import threading
 from picraftzero.utils import arduino_map
 from picraftzero.log import logger
 from picraftzero.zero import Button
+from picraftzero.config import get_config
+
+config = get_config()
+
 
 USE_EVENT = True
 USE_PYGAME = True
-USE_BLUEDOT = False
+USE_BLUEDOT = config.getboolean('joystick', 'use_bluedot', fallback=False)
 
 HAVE_EVENT = False
 HAVE_PYGAME = False
@@ -53,22 +57,45 @@ if HAVE_BLUEDOT and USE_BLUEDOT:
 
     class InputController:
         def __init__(self, controller_id=0):
-            self.bd = BlueDot()
+            self._listener = None
+            if 0 == controller_id:
+                self.bd = BlueDot()
+                self.bd.when_moved = self._when_moved
+                self.bd.when_released = self._when_released
+            else:
+                logger.error("Only 1 joystick (id==0) is supported when using BlueDot")
+
+            self._x = 0
+            self._y = 0
 
         def stop(self):
             pass
 
         def get_value(self, name):
-            value = 0
             if name == 'rx':
-                value =  self.bd.position.x
+                value =  self._x
             elif name == 'ry':
-                value = self.bd.position.y
+                value = self._y
+            else:
+                value = 0
 
             return value
 
+
+        def _when_moved(self, position):
+            self._x = int(position.x * 100)
+            self._y = int(position.y * 100)
+            if self._listener:
+                self._listener(self)
+
+        def _when_released(self, position):
+            self._x = 0
+            self._y = 0
+            if self._listener:
+                self._listener(self)
+
         def add_listener(self, func):
-            self.bd.when_moved = lambda x: func(self)
+            self._listener = func
 
 elif HAVE_EVENT and USE_EVENT:
     logger.info("Using EventDev implementation")
